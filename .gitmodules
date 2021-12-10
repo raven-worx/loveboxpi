@@ -1,0 +1,3 @@
+[submodule "waveshare_epd"]
+	path = waveshare_epd
+	url = https://github.com/waveshare/e-Paper.git
