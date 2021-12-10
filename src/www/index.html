@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lovebox</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/bootstrap-grid.min.css"/>
+  <link rel="stylesheet" href="css/bootstrap-reboot.min.css"/>
+  <link rel="stylesheet" href="css/bootstrap-utilities.min.css"/>
+  <link rel="stylesheet" href="css/bootstrap-icons.css"/>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+
+<header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container-fluid">
+		<span class="navbar-brand mb-0 h1">Lovebox</span>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" href="#" data-bs-target="main-page">
+						<i class="bi bi-house"></i> Home
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#" data-bs-target="settings-page">
+						<i class="bi bi-wrench"></i> Settings
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+</header>
+
+
+<content>
+<div class="container" id="pages">
+
+<div class="page container" id="main-page">
+
+	<div class="row">
+		<div class="col-auto">
+			<div class="btn-toolbar" role="toolbar" aria-label="Editor Toolbar">
+				<div class="btn-group me-2" role="group" aria-label="Editor Mode">
+					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_selection" value="selection" autocomplete="off" checked>
+					<label class="btn btn-outline-primary" for="editor_mode_selection"><i class="bi bi-cursor"></i></label>
+					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_inserttext" value="inserttext" autocomplete="off">
+					<label class="btn btn-outline-primary" for="editor_mode_inserttext"><i class="bi bi-type"></i></label>
+					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_freedraw" value="freedraw" autocomplete="off">
+					<label class="btn btn-outline-primary" for="editor_mode_freedraw"><i class="bi bi-pen"></i></label>
+					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_eraser" value="eraser" autocomplete="off">
+					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser"></i></label>
+				</div>
+				<div class="btn-group me-2" role="group" aria-label="Second group">
+					<button type="button" class="btn btn-secondary">5</button>
+					<button type="button" class="btn btn-secondary">6</button>
+					<button type="button" class="btn btn-secondary">7</button>
+				</div>
+				<div class="btn-group" role="group" aria-label="Third group">
+					<button type="button" class="btn btn-info">8</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-auto">
+			<div class="input-group">
+				<button class="btn btn-outline-secondary" type="button" onclick="return decreaseInputValue('#editor_brush_size')">-</button>
+				<input type="text" class="form-control" id="editor_brush_size" inputmode="numeric" aria-label="Brush size" value="10">
+				<button class="btn btn-outline-secondary" type="button" onclick="return increaseInputValue('#editor_brush_size')">+</button>
+				<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','2')">2</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','3')">3</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','4')">4</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','5')">5</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','8')">8</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','10')">10</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','13')">13</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','16')">16</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','20')">20</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','23')">23</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','30')">30</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','35')">35</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','40')">40</a></li>
+					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','50')">50</a></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-12 d-flex justify-content-center">
+			<canvas id="editor_canvas" width="264" height="176" style="border: 1px solid black;"></canvas>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col">
+		  <button type="button" class="btn btn-danger btn-lg col" data-bs-toggle="modal" data-bs-target="#clear-dialog">
+			<i class="bi bi-x-square"></i>
+			Clear
+		  </button>
+		</div>
+		<div class="col-auto">
+		  <button type="button" class="btn btn-secondary btn-lg" onclick="return getLastImage()">
+			<i class="bi bi-box-arrow-out-down"></i>
+			Get last text
+		  </button>
+		</div>
+		<div class="col-auto">
+		  <button type="button" class="btn btn-primary btn-lg" onclick="return displayImage()">
+			<i class="bi bi-box-arrow-in-up"></i>
+			Send
+		  </button>
+		</div>
+	</div>
+
+</div>
+
+
+<div class="page container" id="settings-page">
+
+	<form id="settings-form">
+		
+		<div class="row form-switch">
+			<label class="col-sm-2 col-form-label" for="led_enabled">LED enabled</label>
+			<div class="col-sm-10">
+				<input class="form-check-control" type="checkbox" value="" id="led_enabled">
+			</div>
+		</div>
+		<div class="row">
+			<label for="led_color" class="col-sm-2 col-form-label">LED Color</label>
+			<div class="col-sm-10">
+				<input type="color" class="form-control form-control-color" id="led_color" value="#ff0000" title="Choose LED color">
+			</div>
+		</div>
+		
+	</form>
+	<div class="row">
+	<div class="col">
+	  <button type="button" class="btn btn-secondary btn-lg col">
+		<i class="bi bi-x-square"></i> Discard
+	  </button>
+	</div>
+	<div class="col-auto">
+	  <button type="submit" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
+		<i class="bi bi-check-lg"></i> Save
+	  </button>
+	</div>
+	</div>
+</div>
+
+</div>
+</content>
+
+
+<footer class="mt-auto">
+	<a href="https://github.com/raven-worx/lovebox-rpi-ng" target="_blank">&copy; 2022 raven-worx Software</a>
+</footer>
+
+<!-- modal dialogs -->
+
+<div class="modal fade" id="clear-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="clearDialogLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="clearDialogLabel">Clear contents</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="save-settings-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="saveSettigsDialogLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saveSettigsDialogLabel">Save settings</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Load Bootstrap JavaScript components -->
+<script src="js/jquery.min.js"></script>
+<!--<script src="js/popper.min.js"></script>-->
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/fabric.min.js"></script>
+<script src="js/lovebox.js"></script>
+
+</body>
+</html>
