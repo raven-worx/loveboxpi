@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      version_num: ${{ steps.version.outputs.version_num }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: version
+        run: |
+          ver=${VERSION_REF##*/}
+          if [[ "$ver" =~ ^v([0-9]+).([0-9]+).([0-9]+) ]]; then
+            echo "::set-output name=version::$ver"
+            echo "::set-output name=version_num::${ver:1}"
+          else
+            echo "::set-output name=version::v0.0.0"
+            echo "::set-output name=version_num::0.0.0"
+          fi
+        env:
+          VERSION_REF: ${{ github.ref }}
+        shell: bash
+        id: version
+        
+      - name: Prepare dist
+        run: |
+          mkdir -p dist/usr/local/lovebox
+          mkdir -p dist/etc/lovebox
+          cp -r src/* dist/usr/local/lovebox/
+        shell: bash
+        
+      - name: Create archive
+        run: tar czf $ARCHIVE_NAME -C dist .
+        env:
+          ARCHIVE_NAME: lovebox-rpi-ng_${{ steps.version.outputs.version_num }}.tar.gz
+      - name: Upload archive artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-archive
+          path: |
+            *.tar.gz
+            
+      - name: Build deb package
+        uses: jiro4989/build-deb-action@v2
+        with:
+          package: lovebox-rpi-ng
+          package_root: dist
+          maintainer: raven-worx
+          version: ${{ steps.version.outputs.version_num }}
+          arch: 'armhf'
+          depends: 'python3,python3-rpi.gpio,python3-gpiozero,python3-spidev,python3-numpy,python3-pil'
+          desc: 'Lovebox RPi'
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-deb
+          path: |
+            *.deb
+  
+  create-release:
+    runs-on: ubuntu-latest
+    needs:
+      - build-artifacts
+    steps:
+      - uses: actions/checkout@v1
+      
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{needs.build-artifacts.outputs.version}}
+          body_path: RELEASE.md
+          draft: false
+          prerelease: false
+
+      - name: Download archive artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-archive
+          path: dist
+      - name: Download deb artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-deb
+          path: dist
+        
+      - name: Retrieve meta info 
+        id: vars
+        run: |
+          cd dist
+          echo "::set-output name=deb_name::$(ls *.deb | head -n 1)"
+          echo "::set-output name=archive_name::$(ls *.tar.gz | head -n 1)"
+          
+      - name: Upload archive artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/${{ steps.vars.outputs.archive_name }}
+          asset_name: ${{ steps.vars.outputs.archive_name }}
+          asset_content_type: application/gzip
+          
+      - name: Upload deb artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/${{ steps.vars.outputs.deb_name }}
+          asset_name: ${{ steps.vars.outputs.deb_name }}
+          asset_content_type: application/vnd.debian.binary-package
