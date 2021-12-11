@@ -35,6 +35,9 @@ jobs:
         run: |
           mkdir -p dist/usr/local/lovebox
           mkdir -p dist/etc/lovebox
+          mkdir -p dist/etc/systemd/system/multi-user.target.wants
+          cp -r deb/* dist/
+          ln -s /etc/systemd/system/lovebox.service dist/etc/systemd/system/multi-user.target.wants/lovebox.service
           cp -r src/* dist/usr/local/lovebox/
         shell: bash
         

@@ -1,0 +1,14 @@
+[Unit]
+Description=Lovebox webserver/webservice daemon
+After=network.target
+StartLimitIntervalSec=1
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+WorkingDirectory=/usr/local/lovebox/
+ExecStart=/usr/local/lovebox/loveboxd.py
+
+[Install]
+WantedBy=multi-user.target
