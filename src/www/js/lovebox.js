@@ -97,6 +97,50 @@ function clearMessage() {
 	});
 }
 
+function saveSettings() {
+	var formData = {
+		"led": {
+			"enabled": $("form#settings-form #led_enabled").is(":checked") ? 1 : 0,
+			"color": $("form#settings-form #led_color").val()
+		}
+	}
+	
+	$.ajax({
+		method: "POST",
+		url: "api/v1/settings",
+		data: JSON.stringify(formData),
+		processData: false,
+		contentType: "application/json"
+	})
+	.done(function() {
+		showSuccessMessage("Successfully saved settings")
+	})
+	.fail(function() {
+		showErrorMessage("Failed to save settings")
+	})
+	.always(function() {
+		// clear spinning
+	});
+}
+
+function retrieveSettings() {
+	$.ajax({
+		method: "GET",
+		url: "api/v1/settings",
+		cache: false,
+		contentType: "application/json"
+	})
+	.done(function(data) {
+		console.log( JSON.stringify(data) )
+	})
+	.fail(function() {
+		console.error("Failed to retrieve settings")
+	})
+	.always(function() {
+		// clear spinning
+	});
+}
+
 
 $( document ).ready(function() {
 	/*

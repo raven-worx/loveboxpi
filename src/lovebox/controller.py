@@ -1,12 +1,13 @@
 import io
 import os
 import base64
+import socket
 from . import config
 from . import display
 
-_RT_DIR=os.getenv("RUNTIME_DIRECTORY", "/tmp")
-_IMAGE_PATH=_RT_DIR+"/image"
-_ACTIVE_PATH=_RT_DIR+"/active"
+_RUN_DIR = os.getenv("RUNTIME_DIRECTORY", "/tmp")
+_IMAGE_PATH = _RUN_DIR+"/image"
+_ACTIVE_PATH = _RUN_DIR+"/active"
 
 def init():
 	display.init()
@@ -21,7 +22,7 @@ def setMessage(imageData64):
 	f.write(imageData)
 	f.close()
 	
-	display.write(imageData)
+	display.writeImage(imageData)
 	
 	#TODO: set LED
 	
@@ -43,11 +44,39 @@ def clearMessage():
 	return True
 
 def restoreState():
-	# TODO: check if state is present, if not clear display
+	f = open(_ACTIVE_PATH, "r")
+	state = f.readline()
+	f.close()
+	
+	display.clear()
+	
+	if state.startswith("1"):
+		f = open(_IMAGE_PATH, "rb")
+		imageData = f.read()
+		f.close()
+		
+		display.writeImage(imageData)
+		# TODO: restore LED
+	
 	return True
 
 def test():
-	# TODO: initiate test
-	#time.sleep(5)
-	#restoreState()
+	display.clear()
+	display.writeText("TEST")
+	
+	# TODO: test LED
+	
+	time.sleep(5)
+	restoreState()
 	return True
+
+def showHostInfo():
+	hostname = socket.gethostname()
+	local_ip = socket.gethostbyname(hostname)
+	
+	display.clear()
+	
+	display.writeText(hostname + "\n" + local_ip)
+	
+	time.sleep(5)
+	restoreState()

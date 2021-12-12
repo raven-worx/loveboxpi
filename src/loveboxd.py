@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-import argparse
 import re
 import cgi
 import json
@@ -14,20 +13,18 @@ import lovebox.controller
 
 class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	def do_POST(self):
-		if re.search('/api/v1/config', self.path):
+		if re.search('/api/v1/settings', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
-			if ctype == 'application/json':
+			if ctype[0] == 'application/json':
 				length = int(self.headers.get('content-length'))
-				rfile_str = self.rfile.read(length).decode('utf8')
-				data = urllib.parse.parse_qs(rfile_str, keep_blank_values=1)
+				data = self.rfile.read(length).decode('utf8')
 				
-				lovebox.config.writeUserSettingsJSON(json)
-				
-				# HTTP 200: ok
-				self.send_response(200)
+				if lovebox.config.writeSettingsJSON(data):
+					self.send_response(200)
+				else:
+					self.send_response(500)
 			else:
-				# HTTP 400: bad request
-				self.send_response(400, "Bad Request: must give data")
+				self.send_response(400, "Bad Request: no data provided")
 		elif re.search('/api/v1/display', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
 			if ctype[0].startswith('application/x-www-form-urlencoded'):
@@ -42,20 +39,18 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 				
 				self.send_response(200)
 			else:
-				# HTTP 400: bad request
 				self.send_response(400, "Bad Request: unexpected content type")
 		else:
-			# HTTP 403: forbidden
 			self.send_response(403)
 		
 		self.end_headers()
 	
 	def do_GET(self):
-		if re.search('/api/v1/config', self.path):
+		if re.search('/api/v1/settings', self.path):
 			self.send_response(200)
 			self.send_header('Content-Type', 'application/json')
 			self.end_headers()
-			data = lovebox.config.readUserSettingsJSON()
+			data = lovebox.config.readSettingsJSON()
 			self.wfile.write( data.encode('utf8') )
 		else:
 			super().do_GET() # let SimpleHTTPRequestHandler serve the files 
@@ -65,7 +60,6 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 			lovebox.controller.clearMessage()
 			self.send_response(200)
 		else:
-			# HTTP 403: forbidden
 			self.send_response(403)
 		self.end_headers()
 

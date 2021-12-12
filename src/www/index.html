@@ -125,25 +125,25 @@
 		<div class="row form-switch">
 			<label class="col-sm-2 col-form-label" for="led_enabled">LED enabled</label>
 			<div class="col-sm-10">
-				<input class="form-check-control" type="checkbox" value="" id="led_enabled">
+				<input class="form-check-control" type="checkbox" value="" name="led_enabled" id="led_enabled">
 			</div>
 		</div>
 		<div class="row">
 			<label for="led_color" class="col-sm-2 col-form-label">LED Color</label>
 			<div class="col-sm-10">
-				<input type="color" class="form-control form-control-color" id="led_color" value="#ff0000" title="Choose LED color">
+				<input type="color" class="form-control form-control-color" name="led_color" id="led_color" value="#ff0000" title="Choose LED color">
 			</div>
 		</div>
 		
 	</form>
 	<div class="row">
 	<div class="col">
-	  <button type="button" class="btn btn-secondary btn-lg col">
+	  <button type="button" class="btn btn-secondary btn-lg col" onclick="return retrieveSettings()">
 		<i class="bi bi-x-square"></i> Discard
 	  </button>
 	</div>
 	<div class="col-auto">
-	  <button type="submit" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
+	  <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
 		<i class="bi bi-check-lg"></i> Save
 	  </button>
 	</div>
@@ -168,7 +168,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Clear the current message on the display?
+        Are you sure you want to clear the current message on the display?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -186,11 +186,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+        Are you sure you want to save the settings on the display?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="return saveSettings()">Save</button>
       </div>
     </div>
   </div>
