@@ -1,49 +1,12 @@
+import traceback
 import json
 import configparser
 import copy
 from ast import literal_eval
 
-_UserConfigFilePath = "/etc/lovebox/lovebox.conf"
+_ConfigFilePath = "/etc/lovebox/lovebox.conf"
 
-_DefaultUserSettings = {
-	"led": {
-		"enabled": 1,
-		"color": "#ff0000"
-	}
-}
-
-def readUserSettingsJSON():
-	js = copy.deepcopy(_DefaultUserSettings)
-	
-	config = configparser.ConfigParser()
-	config.read(_UserConfigFilePath)
-	
-	for section in config.sections():
-		if section in js:
-			for (key, val) in config.items(section):
-				js[section][key] = val
-	
-	return json.dumps(js)
-
-def writeUserSettingsJSON(js):
-	config = configparser.ConfigParser()
-	config.read(_UserConfigFilePath)
-	
-	jsonObj = json.loads(js)
-	for s in jsonObj:
-		if s in _DefaultUserSettings:
-			for k in jsonObj[s]:
-				if k in _DefaultUserSettings[s]:
-					v = jsonObj[s][k]
-					config.set(s, k, v)
-	
-	with open(_UserConfigFilePath, 'w') as f:
-		config.write(f)
-
-
-_DConfigFilePath = "/etc/lovebox/loveboxd.conf"
-
-_DefaultDSettings = {
+_DefaultSettings = {
 	"www": {
 		"host": "0.0.0.0",
 		"port": 8080
@@ -58,13 +21,49 @@ _DefaultDSettings = {
 	"led": {
 		"r": 0,
 		"g": 0,
-		"b": 0
+		"b": 0,
+		"enabled": 1,
+		"color": "#ff0000"
 	}
 }
 
+def readSettingsJSON():
+	js = copy.deepcopy(_DefaultSettings)
+	
+	config = configparser.ConfigParser()
+	config.read(_ConfigFilePath)
+	
+	for section in config.sections():
+		if section in js:
+			for (key, val) in config.items(section):
+				js[section][key] = val
+	
+	return json.dumps(js)
+
+def writeSettingsJSON(js):
+	try:
+		config = configparser.ConfigParser()
+		config.read(_ConfigFilePath)
+		
+		jsonObj = json.loads(js)
+		for s in jsonObj:
+			if s in _DefaultSettings:
+				for k in jsonObj[s]:
+					if k in _DefaultSettings[s]:
+						v = jsonObj[s][k]
+						config.set(s, k, str(v))
+		
+		with open(_ConfigFilePath, 'w') as f:
+			config.write(f)
+		
+		return True
+	except Exception:
+		traceback.print_exc()
+	return False
+
 def readSetting(group, key):
 	config = configparser.ConfigParser()
-	config.read(_DConfigFilePath)
+	config.read(_ConfigFilePath)
 	
 	for section in config.sections():
 		if section == group:
@@ -73,3 +72,4 @@ def readSetting(group, key):
 					return v
 	
 	return None
+
