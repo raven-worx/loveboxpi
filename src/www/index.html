@@ -39,6 +39,7 @@
 
 
 <content>
+
 <div class="container" id="pages">
 
 <div class="page container" id="main-page">
@@ -101,19 +102,13 @@
 	
 	<div class="row">
 		<div class="col">
-		  <button type="button" class="btn btn-danger btn-lg col" data-bs-toggle="modal" data-bs-target="#clear-dialog">
+		  <button id="clear-message-button" type="button" class="btn btn-danger btn-lg col" data-bs-toggle="modal" data-bs-target="#clear-dialog">
 			<i class="bi bi-x-square"></i>
 			Clear
 		  </button>
 		</div>
 		<div class="col-auto">
-		  <button type="button" class="btn btn-secondary btn-lg" onclick="return getLastImage()">
-			<i class="bi bi-box-arrow-out-down"></i>
-			Get last text
-		  </button>
-		</div>
-		<div class="col-auto">
-		  <button type="button" class="btn btn-primary btn-lg" onclick="return displayImage()">
+		  <button id="send-message-button" type="button" class="btn btn-primary btn-lg" onclick="return setMessage()">
 			<i class="bi bi-box-arrow-in-up"></i>
 			Send
 		  </button>
@@ -169,15 +164,15 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="clearDialogLabel">Clear contents</h5>
+        <h5 class="modal-title" id="clearDialogLabel">Clear display</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+        Clear the current message on the display?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Clear</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="return clearMessage()">Clear</button>
       </div>
     </div>
   </div>

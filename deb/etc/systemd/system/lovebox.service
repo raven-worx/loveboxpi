@@ -8,6 +8,8 @@ Type=simple
 Restart=always
 RestartSec=1
 WorkingDirectory=/usr/local/lovebox/
+RuntimeDirectory=lovebox
+RuntimeDirectoryPreserve=yes
 ExecStart=/usr/local/lovebox/loveboxd.py
 
 [Install]

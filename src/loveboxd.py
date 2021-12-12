@@ -9,9 +9,8 @@ import threading
 import os
 import mimetypes
 import urllib
-import base64
 import lovebox.config
-
+import lovebox.controller
 
 class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	def do_POST(self):
@@ -38,7 +37,8 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 					environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']}
 				)
 				
-				imagedata = base64.b64decode( formdata["image"].value )
+				imageData64 = formdata["image"].value
+				lovebox.controller.setMessage( imageData64 )
 				
 				self.send_response(200)
 			else:
@@ -49,7 +49,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 			self.send_response(403)
 		
 		self.end_headers()
-
+	
 	def do_GET(self):
 		if re.search('/api/v1/config', self.path):
 			self.send_response(200)
@@ -59,9 +59,19 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 			self.wfile.write( data.encode('utf8') )
 		else:
 			super().do_GET() # let SimpleHTTPRequestHandler serve the files 
-
+	
+	def do_DELETE(self):
+		if re.search('/api/v1/display', self.path):
+			lovebox.controller.clearMessage()
+			self.send_response(200)
+		else:
+			# HTTP 403: forbidden
+			self.send_response(403)
+		self.end_headers()
 
 def main():
+	lovebox.controller.init()
+	
 	host = lovebox.config.readSetting("www","host")
 	port = int(lovebox.config.readSetting("www","port"))
 	

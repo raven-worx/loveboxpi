@@ -45,16 +45,55 @@ function decreaseInputValue(item) {
 	return false
 }
 
-function displayImage() {
-	var imgData = $("#editor_canvas").prop("fabric").toDataURL({format: 'png'}).replace(/^data:image\/png;base64,/, "")
+function showSuccessMessage(msg) {
+	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
+	$("body").append(alertEl)
+	setTimeout(function() {
+		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
+	}, 2000);
+}
+
+function showErrorMessage(msg) {
+	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
+	$("body").append(alertEl)
+	setTimeout(function() {
+		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
+	}, 3000);
+}
+
+function setMessage() {
+	var c = $("#editor_canvas").prop("fabric")
+	var imgData = c.toDataURL({format: 'png'}).replace(/^data:image\/png;base64,/, "")
 	
 	$.ajax({
 		method: "POST",
 		url: "api/v1/display",
 		data: { image: imgData }
 	})
-	.done(function( msg ) {
-		alert( "Data Saved: " + msg );
+	.done(function() {
+		showSuccessMessage("Successfully set message")
+	})
+	.fail(function() {
+		showErrorMessage("Failed to set message")
+	})
+	.always(function() {
+		// clear spinning
+	});
+}
+
+function clearMessage() {
+	$.ajax({
+		method: "DELETE",
+		url: "api/v1/display"
+	})
+	.done(function() {
+		showSuccessMessage("Successfully cleared message");
+	})
+	.fail(function() {
+		showErrorMessage("Failed to clear message")
+	})
+	.always(function() {
+		// clear spinning
 	});
 }
 
