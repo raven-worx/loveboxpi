@@ -41,7 +41,7 @@ jobs:
           cp -r deb/* dist/
           ln -s /etc/systemd/system/lovebox.service dist/etc/systemd/system/multi-user.target.wants/lovebox.service
           cp -r src/* dist/usr/local/lovebox/
-          cp -r waveshare_epd/RaspberryPi_JetsonNano/python/waveshare_epd dist/usr/local/lovebox/
+          cp -r waveshare_epd/RaspberryPi_JetsonNano/python/lib/waveshare_epd dist/usr/local/lovebox/
         shell: bash
         
       - name: Create archive
