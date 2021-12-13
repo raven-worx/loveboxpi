@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+systemctl --system daemon-reload >/dev/null || true
+systemctl --system enable lovebox >/dev/null || true
+systemctl --system start lovebox >/dev/null || true
