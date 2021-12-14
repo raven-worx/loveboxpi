@@ -40,7 +40,7 @@ jobs:
           cp -r deb/* dist/
           cp -r src/* dist/usr/local/lovebox/
           cp -r waveshare_epd/RaspberryPi_JetsonNano/python/lib/waveshare_epd dist/usr/local/lovebox/
-          echo $VERSION_REF > dist/VERSION
+          echo -n $VERSION_REF > dist/usr/local/lovebox/VERSION
         env:
           VERSION_REF: ${{ steps.version.outputs.version_num }}
         shell: bash
