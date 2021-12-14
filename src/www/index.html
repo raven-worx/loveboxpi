@@ -24,18 +24,18 @@
 			<ul class="nav navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
 					<a class="nav-link active" href="#home" role="button" id="nav-home" data-bs-target="#main-page" aria-controls="main-page" aria-selected="true">
-						<i class="bi bi-house"></i> Home
+						<i class="bi bi-house" role="icon"></i> Home
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#settings" role="button" id="nav-settings" data-bs-target="#settings-page" aria-controls="#settings-page" aria-selected="false">
-						<i class="bi bi-wrench"></i> Settings
+						<i class="bi bi-wrench" role="icon"></i> Settings
 					</a>
 				</li>
 			</ul>
 			<span id="nav-version-text" class="navbar-text me-2"></span>
 			<button id="nav-clear-message-button" type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#clear-dialog">
-			<i class="bi bi-x-square"></i>
+			<i class="bi bi-x-square" role="icon"></i>
 			Clear
 			</button>
 		</div>
@@ -55,16 +55,16 @@
 			<div class="btn-toolbar" role="toolbar" aria-label="Editor Toolbar">
 				<div class="btn-group me-2" role="group" aria-label="Editor Mode">
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_selection" value="selection" autocomplete="off" checked>
-					<label class="btn btn-outline-primary" for="editor_mode_selection"><i class="bi bi-cursor"></i></label>
+					<label class="btn btn-outline-primary" for="editor_mode_selection"><i class="bi bi-cursor" role="icon"></i></label>
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_inserttext" value="inserttext" autocomplete="off">
-					<label class="btn btn-outline-primary" for="editor_mode_inserttext"><i class="bi bi-type"></i></label>
+					<label class="btn btn-outline-primary" for="editor_mode_inserttext"><i class="bi bi-type" role="icon"></i></label>
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_freedraw" value="freedraw" autocomplete="off">
-					<label class="btn btn-outline-primary" for="editor_mode_freedraw"><i class="bi bi-pen"></i></label>
+					<label class="btn btn-outline-primary" for="editor_mode_freedraw"><i class="bi bi-pen" role="icon"></i></label>
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_eraser" value="eraser" autocomplete="off">
-					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser"></i></label>
+					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser" role="icon"></i></label>
 				</div>
 				<div class="btn-group" role="group" aria-label="Third group">
-					<button id="editor_clear" type="button" class="btn btn-danger"><i class="bi bi-x-square"></i></button>
+					<button id="editor_clear" type="button" class="btn btn-danger"><i class="bi bi-x-square" role="icon"></i></button>
 				</div>
 			</div>
 		</div>
@@ -104,7 +104,7 @@
 	<div class="row">
 		<div class="col-auto">
 		  <button id="send-message-button" type="button" class="btn btn-primary btn-lg" onclick="return setMessage()">
-			<i class="bi bi-box-arrow-in-up"></i>
+			<i class="bi bi-box-arrow-in-up" role="icon"></i>
 			Send
 		  </button>
 		</div>
@@ -166,13 +166,13 @@
 	</form>
 	<div class="row">
 	<div class="col">
-	  <button type="button" class="btn btn-secondary btn-lg col" onclick="return retrieveSettings()">
-		<i class="bi bi-x-square"></i> Load
+	  <button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col" onclick="return retrieveSettings()">
+		<i class="bi bi-x-square" role="icon"></i> Load
 	  </button>
 	</div>
 	<div class="col-auto">
-	  <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
-		<i class="bi bi-check-lg"></i> Save
+	  <button id="save-settings-button" type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
+		<i class="bi bi-check-lg" role="icon"></i> Save
 	  </button>
 	</div>
 	</div>

@@ -45,6 +45,22 @@ function decreaseInputValue(item) {
 	return false
 }
 
+function setButtonLoading(btn, loading) {
+	if( !btn ) return;
+	
+	let spinner = btn.find("span[role='status']")
+	let icon = btn.find("i[role='icon']")
+	
+	if( loading ) {
+		icon.hide()
+		btn.prepend('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>')
+	} else {
+		spinner.remove()
+		icon.show()
+	}
+	btn.prop('disabled', loading);
+}
+
 function showSuccessMessage(msg) {
 	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
@@ -65,6 +81,8 @@ function setMessage() {
 	var c = $("#editor_canvas").prop("fabric")
 	var imgData = c.toDataURL({format: 'png'}).replace(/^data:image\/png;base64,/, "")
 	
+	setButtonLoading( $("button#send-message-button"), true )
+	
 	$.ajax({
 		method: "POST",
 		url: "api/v1/display",
@@ -77,11 +95,13 @@ function setMessage() {
 		showErrorMessage("Failed to set message")
 	})
 	.always(function() {
-		// clear spinning
+		setButtonLoading( $("button#send-message-button"), false )
 	});
 }
 
 function clearMessage() {
+	setButtonLoading( $("button#nav-clear-message-button"), true )
+	
 	$.ajax({
 		method: "DELETE",
 		url: "api/v1/display"
@@ -93,7 +113,7 @@ function clearMessage() {
 		showErrorMessage("Failed to clear message")
 	})
 	.always(function() {
-		// clear spinning
+		setButtonLoading( $("button#nav-clear-message-button"), false )
 	});
 }
 
@@ -104,6 +124,8 @@ function saveSettings() {
 			"color": $("form#settings-form input#led_color").val()
 		}
 	}
+	
+	setButtonLoading( $("button#save-settings-button"), true )
 	
 	$.ajax({
 		method: "POST",
@@ -119,11 +141,13 @@ function saveSettings() {
 		showErrorMessage("Failed to save settings")
 	})
 	.always(function() {
-		// clear spinning
+		setButtonLoading( $("button#save-settings-button"), false )
 	});
 }
 
 function retrieveSettings() {
+	setButtonLoading( $("button#load-settings-button"), true )
+	
 	$.ajax({
 		method: "GET",
 		url: "api/v1/settings",
@@ -144,7 +168,7 @@ function retrieveSettings() {
 		console.error("Failed to retrieve settings")
 	})
 	.always(function() {
-		// clear spinning
+		setButtonLoading( $("button#load-settings-button"), false )
 	});
 }
 
