@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/bootstrap-reboot.min.css"/>
   <link rel="stylesheet" href="css/bootstrap-utilities.min.css"/>
   <link rel="stylesheet" href="css/bootstrap-icons.css"/>
+  <link rel="stylesheet" href="css/lovebox.css"/>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -19,19 +20,24 @@
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+		<div id="navbarContent" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link" href="#" data-bs-target="main-page">
+					<a class="nav-link active" href="#home" role="button" id="nav-home" data-bs-target="#main-page" aria-controls="main-page" aria-selected="true">
 						<i class="bi bi-house"></i> Home
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#" data-bs-target="settings-page">
+					<a class="nav-link" href="#settings" role="button" id="nav-settings" data-bs-target="#settings-page" aria-controls="#settings-page" aria-selected="false">
 						<i class="bi bi-wrench"></i> Settings
 					</a>
 				</li>
 			</ul>
+			<span id="nav-version-text" class="navbar-text me-2"></span>
+			<button id="nav-clear-message-button" type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#clear-dialog">
+			<i class="bi bi-x-square"></i>
+			Clear
+			</button>
 		</div>
 	</div>
 </nav>
@@ -40,9 +46,9 @@
 
 <content>
 
-<div class="container" id="pages">
+<div class="tab-content container" id="pages">
 
-<div class="page container" id="main-page">
+<div class="page tab-pane fade show active" id="main-page" role="tabpanel" aria-labelledby="nav-home">
 
 	<div class="row">
 		<div class="col-auto">
@@ -57,13 +63,8 @@
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_eraser" value="eraser" autocomplete="off">
 					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser"></i></label>
 				</div>
-				<div class="btn-group me-2" role="group" aria-label="Second group">
-					<button type="button" class="btn btn-secondary">5</button>
-					<button type="button" class="btn btn-secondary">6</button>
-					<button type="button" class="btn btn-secondary">7</button>
-				</div>
 				<div class="btn-group" role="group" aria-label="Third group">
-					<button type="button" class="btn btn-info">8</button>
+					<button id="editor_clear" type="button" class="btn btn-danger"><i class="bi bi-x-square"></i></button>
 				</div>
 			</div>
 		</div>
@@ -101,12 +102,6 @@
 	</div>
 	
 	<div class="row">
-		<div class="col">
-		  <button id="clear-message-button" type="button" class="btn btn-danger btn-lg col" data-bs-toggle="modal" data-bs-target="#clear-dialog">
-			<i class="bi bi-x-square"></i>
-			Clear
-		  </button>
-		</div>
 		<div class="col-auto">
 		  <button id="send-message-button" type="button" class="btn btn-primary btn-lg" onclick="return setMessage()">
 			<i class="bi bi-box-arrow-in-up"></i>
@@ -118,28 +113,61 @@
 </div>
 
 
-<div class="page container" id="settings-page">
+<div class="page tab-pane fade" id="settings-page" role="tabpanel" aria-labelledby="nav-settings">
 
 	<form id="settings-form">
-		
-		<div class="row form-switch">
-			<label class="col-sm-2 col-form-label" for="led_enabled">LED enabled</label>
-			<div class="col-sm-10">
-				<input class="form-check-control" type="checkbox" value="" name="led_enabled" id="led_enabled">
+		<fieldset>
+			<legend>LED</legend>
+			<div class="form-group">
+				<label for="led_enabled">Enabled</label>
+				<div class="form-check">
+					<input class="form-check-input position-static" type="checkbox" id="led_enabled" value="led_enabled">
+				</div>
+				<small id="led_enabled_desc" class="form-text text-muted">Should the LED pulsate on a new message</small>
 			</div>
-		</div>
-		<div class="row">
-			<label for="led_color" class="col-sm-2 col-form-label">LED Color</label>
-			<div class="col-sm-10">
+			<div class="form-group">
+				<label for="led_color">Color</label>
 				<input type="color" class="form-control form-control-color" name="led_color" id="led_color" value="#ff0000" title="Choose LED color">
+				<small id="led_color_desc" class="form-text text-muted">The color of the LED</small>
 			</div>
-		</div>
+		</fieldset>
+		<fieldset>
+			<legend>Display</legend>
+			<div class="form-group">
+				<label for="display_type">Type</label>
+				<select id="display_type" name="display_type" class="form-select"></select>
+				<small id="display_type_desc" class="form-text text-muted">The attached display type of the box</small>
+			</div>
+			<div class="form-group">
+				<label for="display_rotation">Rotation</label>
+				<select id="display_rotation" name="display_rotation" class="form-select">
+					<option value="0" selected>0</option>
+					<option value="90">90</option>
+					<option value="180">180</option>
+					<option value="270">270</option>
+				</select>
+				<small id="display_rotation_desc" class="form-text text-muted">Rotation of the content displayed</small>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>Server</legend>
+			<div class="form-group">
+				<label for="server_host">Host</label>
+				<input type="text" minlength="7" maxlength="15" class="form-control" id="server_host" value="0.0.0.0" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
+				<small id="server_host_desc" class="form-text text-muted">The interface the webserver should listen on. Use '0.0.0.0' for all interfaces.</small>
+			</div>
+			<div class="form-group">
+				<label for="server_port">Port</label>
+				<input type="number" min="0" max="65535" class="form-control" id="server_port" value="80">
+				<small id="server_port_desc" class="form-text text-muted">The port the webserver should listen on. Port '80' is the default for HTTP.</small>
+			</div>
+		</fieldset>
 		
 	</form>
 	<div class="row">
 	<div class="col">
 	  <button type="button" class="btn btn-secondary btn-lg col" onclick="return retrieveSettings()">
-		<i class="bi bi-x-square"></i> Discard
+		<i class="bi bi-x-square"></i> Load
 	  </button>
 	</div>
 	<div class="col-auto">
@@ -155,7 +183,7 @@
 
 
 <footer class="mt-auto">
-	<a href="https://github.com/raven-worx/lovebox-rpi-ng" target="_blank">&copy; 2022 raven-worx Software</a>
+	<a href="https://github.com/raven-worx/lovebox-rpi-ng" target="_blank">&copy; 2022 lovebox-rpi-ng</a>
 </footer>
 
 <!-- modal dialogs -->

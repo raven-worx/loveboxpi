@@ -2,8 +2,11 @@ import io
 import os
 import base64
 import socket
+import json
 from . import config
 from . import display
+
+VERSION="0.0.0"
 
 _RUN_DIR = os.getenv("RUNTIME_DIRECTORY", "/tmp")
 _IMAGE_PATH = _RUN_DIR+"/image"
@@ -80,3 +83,10 @@ def showHostInfo():
 	
 	time.sleep(5)
 	restoreState()
+
+def getInfoJSON():
+	js = {
+		"version": VERSION,
+		"display": display.Info
+	}
+	return json.dumps(js)

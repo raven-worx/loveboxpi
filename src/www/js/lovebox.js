@@ -58,7 +58,7 @@ function showErrorMessage(msg) {
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
-	}, 3000);
+	}, 3500);
 }
 
 function setMessage() {
@@ -100,8 +100,8 @@ function clearMessage() {
 function saveSettings() {
 	var formData = {
 		"led": {
-			"enabled": $("form#settings-form #led_enabled").is(":checked") ? 1 : 0,
-			"color": $("form#settings-form #led_color").val()
+			"enabled": $("form#settings-form input#led_enabled").is(":checked") ? 1 : 0,
+			"color": $("form#settings-form input#led_color").val()
 		}
 	}
 	
@@ -131,7 +131,48 @@ function retrieveSettings() {
 		contentType: "application/json"
 	})
 	.done(function(data) {
-		console.log( JSON.stringify(data) )
+		$("form#settings-form #led_enabled").prop('checked', data.led.enabled == "True" || data.led.enabled == "1")
+		$("form#settings-form #led_color").val(data.led.color)
+		
+		$("form#settings-form #display_type").val(data.display.type).change();
+		$("form#settings-form #display_rotation").val(data.display.rotation).change();
+		
+		$("form#settings-form #server_host").val(data.www.host);
+		$("form#settings-form #server_port").val(data.www.port);
+	})
+	.fail(function() {
+		console.error("Failed to retrieve settings")
+	})
+	.always(function() {
+		// clear spinning
+	});
+}
+
+function retrieveInfo() {
+	$.ajax({
+		method: "GET",
+		url: "api/v1/info",
+		cache: false,
+		contentType: "application/json"
+	})
+	.done(function(data) {
+		$("#navbarContent #nav-version-text").text("v"+data.version)
+		
+		data.display.available.forEach(item => {
+			$("form#settings-form select#display_type").append($("<option>", {
+				value: item,
+				text: item
+			}));
+		});
+		
+		let canvas = $("#editor_canvas").prop("fabric")
+		if( data.display.effectiveWidth > 0 && data.display.effectiveHeight > 0 ) {
+			canvas.setWidth( data.display.effectiveWidth );
+			canvas.setHeight( data.display.effectiveHeight );
+			canvas.calcOffset();
+		}
+		
+		retrieveSettings()
 	})
 	.fail(function() {
 		console.error("Failed to retrieve settings")
@@ -146,32 +187,16 @@ $( document ).ready(function() {
 	/*
 		NAVIGATION
 	*/
-	function lb_navigate(item)
-	{
-		if( item.hasClass("active") )
-			return;
-		
-		var target = item.data("bs-target")
-		
-		$("#navbarContent a.nav-link").each( function() {
-		if( $(this).attr('data-bs-target') == target )
-			$(this).addClass("active")
-		else
-			$(this).removeClass("active")
-		});
-		
-		$("#pages .page").each(function() {
-			if( $(this).attr('id') == target )
-				$(this).show()
-			else
-				$(this).hide()
+	var triggerTabList = [].slice.call(document.querySelectorAll('#navbarContent a.nav-link'))
+	triggerTabList.forEach(function (triggerEl) {
+		//var tabTrigger = new bootstrap.Tab(triggerEl)
+		var tabTrigger = bootstrap.Tab.getOrCreateInstance(triggerEl)
+
+		triggerEl.addEventListener('click', function (event){
+			event.preventDefault()
+			tabTrigger.show()
 		})
-	}
-	$( "#navbarContent a.nav-link" ).bind( "click", function(event) {
-		event.preventDefault();
-		lb_navigate( $(this) )
-	});
-	lb_navigate( $("#navbarContent a.nav-link").first() )
+	})
 
 	/*
 		DISPLAY EDITOR (fabricjs)
@@ -234,6 +259,10 @@ $( document ).ready(function() {
 	$('input[type=radio][name=editor_mode]').change(function() {
 		canvas.setEditorMode(this.value)
 	});
+	$('button#editor_clear').on( "click", function (event){
+		event.preventDefault()
+		canvas.clear()
+	});
 	$('input#editor_brush_size').change(function() {
 		canvas.setEditorMode(canvas.editorMode)
 	});
@@ -245,4 +274,7 @@ $( document ).ready(function() {
 				event.preventDefault()
 		}
 	});
+	
+	// init
+	retrieveInfo()
 });

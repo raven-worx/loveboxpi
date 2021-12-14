@@ -13,7 +13,7 @@ _DefaultSettings = {
 	},
 	"display": {
 		"type": "epd2in7",
-		"rotate": 270
+		"rotation": 270
 	},
 	"button": {
 		"pin": 0

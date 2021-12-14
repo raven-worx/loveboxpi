@@ -11,6 +11,7 @@ import urllib
 import lovebox.config
 import lovebox.controller
 
+
 class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	def do_POST(self):
 		if re.search('/api/v1/settings', self.path):
@@ -46,7 +47,13 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 		self.end_headers()
 	
 	def do_GET(self):
-		if re.search('/api/v1/settings', self.path):
+		if re.search('/api/v1/info', self.path):
+			self.send_response(200)
+			self.send_header('Content-Type', 'application/json')
+			self.end_headers()
+			data = lovebox.controller.getInfoJSON()
+			self.wfile.write( data.encode('utf8') )
+		elif re.search('/api/v1/settings', self.path):
 			self.send_response(200)
 			self.send_header('Content-Type', 'application/json')
 			self.end_headers()
@@ -64,15 +71,21 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 		self.end_headers()
 
 def main():
+	dir = os.path.abspath(os.path.dirname(__file__))
+	if os.path.isfile(dir+"/VERSION"):
+		f = open(dir+"/VERSION", "r")
+		lovebox.controller.VERSION = f.readline()
+		f.close()
+	
 	lovebox.controller.init()
 	
 	host = lovebox.config.readSetting("www","host")
 	port = int(lovebox.config.readSetting("www","port"))
 	
-	os.chdir( os.path.abspath(os.path.dirname(__file__)) + '/www' )
+	os.chdir(dir+'/www')
 	
 	server = HTTPServer((host, port), HTTPRequestHandler)
-	print('Lovebox HTTP Server running on ' + host + ':' + str(port))
+	print('Lovebox (v'+ lovebox.controller.VERSION +') HTTP Server running on ' + host + ':' + str(port))
 	server.serve_forever()
 
 
