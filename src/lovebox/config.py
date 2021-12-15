@@ -2,7 +2,7 @@ import traceback
 import json
 import configparser
 import copy
-from ast import literal_eval
+from . import display
 
 _ConfigFilePath = "/etc/lovebox/lovebox.conf"
 
@@ -13,7 +13,7 @@ _DefaultSettings = {
 	},
 	"display": {
 		"type": "epd2in7",
-		"rotation": 270
+		"rotation": 90
 	},
 	"button": {
 		"pin": 0
@@ -52,14 +52,18 @@ def writeSettingsJSON(js):
 					if k in _DefaultSettings[s]:
 						v = jsonObj[s][k]
 						config.set(s, k, str(v))
+				if s == "display":
+					updateDisplay = True
 		
 		with open(_ConfigFilePath, 'w') as f:
 			config.write(f)
 		
-		return True
+		if updateDisplay:
+			display.init() # update display info due to settings changes
 	except Exception:
 		traceback.print_exc()
-	return False
+		return False
+	return True
 
 def readSetting(group, key):
 	config = configparser.ConfigParser()
@@ -72,4 +76,3 @@ def readSetting(group, key):
 					return v
 	
 	return None
-

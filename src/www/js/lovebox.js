@@ -77,6 +77,27 @@ function showErrorMessage(msg) {
 	}, 3500);
 }
 
+function sendCmd(cmd, params) {
+	$.ajax({
+		method: "POST",
+		url: "api/v1/cmd",
+		data: JSON.stringify({
+			"cmd": cmd,
+			"params": params || {}
+		}),
+		processData: false,
+		contentType: "application/json"
+	})
+	.done(function() {
+		showSuccessMessage("Successfully initiated command '" + cmd + "'")
+	})
+	.fail(function() {
+		showErrorMessage("Failed to initiate command '" + cmd + "'")
+	})
+	.always(function() {
+	});
+}
+
 function setMessage() {
 	var c = $("#editor_canvas").prop("fabric")
 	var imgData = c.toDataURL({format: 'png'}).replace(/^data:image\/png;base64,/, "")
@@ -122,6 +143,14 @@ function saveSettings() {
 		"led": {
 			"enabled": $("form#settings-form input#led_enabled").is(":checked") ? 1 : 0,
 			"color": $("form#settings-form input#led_color").val()
+		},
+		"display": {
+			"type": $("form#settings-form #display_type").val(),
+			"rotation": $("form#settings-form #display_rotation").val()
+		},
+		"www": {
+			"host": $("form#settings-form #server_host").val(),
+			"port": $("form#settings-form #server_port").val()
 		}
 	}
 	
@@ -136,6 +165,7 @@ function saveSettings() {
 	})
 	.done(function() {
 		showSuccessMessage("Successfully saved settings")
+		retrieveInfo()
 	})
 	.fail(function() {
 		showErrorMessage("Failed to save settings")
@@ -182,7 +212,7 @@ function retrieveInfo() {
 	.done(function(data) {
 		$("#navbarContent #nav-version-text").text("v"+data.version)
 		
-		data.display.available.forEach(item => {
+		data.display.available.sort().forEach(item => {
 			$("form#settings-form select#display_type").append($("<option>", {
 				value: item,
 				text: item
@@ -195,8 +225,6 @@ function retrieveInfo() {
 			canvas.setHeight( data.display.effectiveHeight );
 			canvas.calcOffset();
 		}
-		
-		retrieveSettings()
 	})
 	.fail(function() {
 		console.error("Failed to retrieve settings")
@@ -301,4 +329,5 @@ $( document ).ready(function() {
 	
 	// init
 	retrieveInfo()
+	retrieveSettings()
 });

@@ -3,6 +3,7 @@ import os
 import base64
 import socket
 import json
+import time
 from . import config
 from . import display
 
@@ -47,13 +48,15 @@ def clearMessage():
 	return True
 
 def restoreState():
-	f = open(_ACTIVE_PATH, "r")
-	state = f.readline()
-	f.close()
+	if os.path.isfile(_ACTIVE_PATH):
+		f = open(_ACTIVE_PATH, "r")
+		state = f.readline()
+		f.close()
+	else:
+		state = "0"
 	
-	display.clear()
 	
-	if state.startswith("1"):
+	if state.startswith("1") and os.path.isfile(_IMAGE_PATH):
 		f = open(_IMAGE_PATH, "rb")
 		imageData = f.read()
 		f.close()
@@ -64,29 +67,28 @@ def restoreState():
 	return True
 
 def test():
-	display.clear()
 	display.writeText("TEST")
 	
 	# TODO: test LED
 	
-	time.sleep(5)
-	restoreState()
+	#time.sleep(5)
+	#restoreState()
 	return True
 
 def showHostInfo():
 	hostname = socket.gethostname()
 	local_ip = socket.gethostbyname(hostname)
 	
-	display.clear()
 	
 	display.writeText(hostname + "\n" + local_ip)
 	
-	time.sleep(5)
-	restoreState()
+	#time.sleep(5)
+	#restoreState()
+	return True
 
 def getInfoJSON():
 	js = {
 		"version": VERSION,
-		"display": display.Info
+		"display": display.INFO
 	}
 	return json.dumps(js)

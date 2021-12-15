@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S python3 -u
 
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import re
@@ -14,7 +14,26 @@ import lovebox.controller
 
 class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	def do_POST(self):
-		if re.search('/api/v1/settings', self.path):
+		if re.search('/api/v1/cmd', self.path):
+			ctype = cgi.parse_header(self.headers.get('content-type'))
+			if ctype[0] == 'application/json':
+				length = int(self.headers.get('content-length'))
+				data = self.rfile.read(length).decode('utf8')
+				jsonData = json.loads(data)
+				
+				cmd = jsonData["cmd"].lower()
+				if cmd == "test" and lovebox.controller.test():
+					self.send_response(200)
+				elif cmd == "restart":
+					def server_shutdown():
+						self.server.shutdown()
+					# must be called in another thread to avoid deadlock
+					threading.Thread(target=server_shutdown).start()
+				else:
+					self.send_response(500)
+			else:
+				self.send_response(400, "Bad Request: no data provided")
+		elif re.search('/api/v1/settings', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
 			if ctype[0] == 'application/json':
 				length = int(self.headers.get('content-length'))
