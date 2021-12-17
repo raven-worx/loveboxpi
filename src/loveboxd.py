@@ -1,19 +1,22 @@
 #!/usr/bin/env -S python3 -u
 
+from socketserver import ThreadingMixIn
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import re
 import cgi
 import json
 import threading
 import os
+import sys
 import mimetypes
 import urllib
+import traceback
 import lovebox.config
 import lovebox.controller
 
-
 class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	def do_POST(self):
+		global _controller
 		if re.search('/api/v1/cmd', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
 			if ctype[0] == 'application/json':
@@ -22,7 +25,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 				jsonData = json.loads(data)
 				
 				cmd = jsonData["cmd"].lower()
-				if cmd == "test" and lovebox.controller.test():
+				if cmd == "test" and _controller.test():
 					self.send_response(200)
 				elif cmd == "restart":
 					def server_shutdown():
@@ -40,6 +43,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 				data = self.rfile.read(length).decode('utf8')
 				
 				if lovebox.config.writeSettingsJSON(data):
+					_controller.update()
 					self.send_response(200)
 				else:
 					self.send_response(500)
@@ -55,7 +59,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 				)
 				
 				imageData64 = formdata["image"].value
-				lovebox.controller.setMessage( imageData64 )
+				_controller.setMessage( imageData64 )
 				
 				self.send_response(200)
 			else:
@@ -66,11 +70,12 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 		self.end_headers()
 	
 	def do_GET(self):
+		global _controller
 		if re.search('/api/v1/info', self.path):
 			self.send_response(200)
 			self.send_header('Content-Type', 'application/json')
 			self.end_headers()
-			data = lovebox.controller.getInfoJSON()
+			data = _controller.getInfoJSON()
 			self.wfile.write( data.encode('utf8') )
 		elif re.search('/api/v1/settings', self.path):
 			self.send_response(200)
@@ -82,21 +87,27 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 			super().do_GET() # let SimpleHTTPRequestHandler serve the files 
 	
 	def do_DELETE(self):
+		global _controller
 		if re.search('/api/v1/display', self.path):
-			lovebox.controller.clearMessage()
+			_controller.clearMessage()
 			self.send_response(200)
 		else:
 			self.send_response(403)
 		self.end_headers()
 
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+	"""Handle requests in a separate thread."""
+
 def main():
+	version = '0.0.0'
 	dir = os.path.abspath(os.path.dirname(__file__))
 	if os.path.isfile(dir+"/VERSION"):
 		f = open(dir+"/VERSION", "r")
-		lovebox.controller.VERSION = f.readline()
+		version = f.readline()
 		f.close()
 	
-	lovebox.controller.init()
+	global _controller
+	_controller = lovebox.controller.Controller(version)
 	
 	host = lovebox.config.readSetting("www","host")
 	port = int(lovebox.config.readSetting("www","port"))
@@ -104,9 +115,13 @@ def main():
 	os.chdir(dir+'/www')
 	
 	server = HTTPServer((host, port), HTTPRequestHandler)
-	print('Lovebox (v'+ lovebox.controller.VERSION +') HTTP Server running on ' + host + ':' + str(port))
+	print('Lovebox (v'+ version +') HTTP Server running on ' + host + ':' + str(port))
 	server.serve_forever()
 
-
 if __name__ == '__main__':
-	main()
+	try:
+		main()
+	except KeyboardInterrupt:
+		print("Shutdown requested...exiting")
+	except Exception:
+		traceback.print_exc(file=sys.stdout)

@@ -94,7 +94,13 @@ def writeText(text):
 		image = Image.new('1', (INFO["effectiveWidth"],INFO["effectiveHeight"]), 255)  # 255: clear the frame
 		draw = ImageDraw.Draw(image)
 		
-		draw.text((10,10), text, font = ImageFont.load_default(), fill = 0)
+		defaultFontPath = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf" # '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+		if os.path.isfile(defaultFontPath):
+			f = ImageFont.truetype(defaultFontPath, 40)
+		else:
+			f = ImageFont.load_default()
+		
+		draw.text((10,10), text, font = f, fill = 0)
 		epd.display(epd.getbuffer(image))
 		epd.sleep()
 		return True

@@ -2,7 +2,6 @@ import traceback
 import json
 import configparser
 import copy
-from . import display
 
 _ConfigFilePath = "/etc/lovebox/lovebox.conf"
 
@@ -19,9 +18,9 @@ _DefaultSettings = {
 		"pin": 0
 	},
 	"led": {
-		"r": 0,
-		"g": 0,
-		"b": 0,
+		"pin_r": "GPIO16",
+		"pin_g": "GPIO20",
+		"pin_b": "GPIO21",
 		"enabled": 1,
 		"color": "#ff0000"
 	}
@@ -52,14 +51,9 @@ def writeSettingsJSON(js):
 					if k in _DefaultSettings[s]:
 						v = jsonObj[s][k]
 						config.set(s, k, str(v))
-				if s == "display":
-					updateDisplay = True
 		
 		with open(_ConfigFilePath, 'w') as f:
 			config.write(f)
-		
-		if updateDisplay:
-			display.init() # update display info due to settings changes
 	except Exception:
 		traceback.print_exc()
 		return False
