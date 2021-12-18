@@ -32,6 +32,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 						self.server.shutdown()
 					# must be called in another thread to avoid deadlock
 					threading.Thread(target=server_shutdown).start()
+					self.send_response(200)
 				else:
 					self.send_response(500)
 			else:
@@ -135,6 +136,7 @@ if __name__ == '__main__':
 	try:
 		main()
 	except KeyboardInterrupt:
-		print("Shutdown requested...exiting")
+		print("Shutdown requested.")
 	except Exception:
 		traceback.print_exc(file=sys.stdout)
+	print('Exiting...')

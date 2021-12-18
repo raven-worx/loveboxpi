@@ -23,8 +23,7 @@ class Controller:
 		self.update()
 	
 	def __del__(self):
-		if self.led is not None:
-			self.led.off()
+		pass
 	
 	def update(self):
 		display.init()

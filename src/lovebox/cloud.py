@@ -4,30 +4,50 @@ import requests
 import os
 import traceback
 import json
+import time
+from . import config
 
 class Cloud:
 	_REMOTEIT_PATH="/usr/local/bin/remoteit"
+	_SERVICE_NAME="loveboxpi"
 	
 	def __init__(self):
 		self.installed = os.path.isfile(self._REMOTEIT_PATH)
 		self.loggedin = False
 		self.device_registered = False
-		self.service_registered = False
+		self.service_added = False
+		self.service_id = ''
+		self.service_address = ''
 		self.INFO = {
 			'status': {
 				'installed': self.installed,
 				'loggedin': self.loggedin,
 				'device_registered': self.device_registered,
-				'service_registered': self.service_registered
+				'service_added': self.service_added
 			},
 			'data': {
 				'username': '',
 				'device_id': '',
 				'device_name': '',
-				'service_id': ''
+				'service_id': '',
+				'service_name': self._SERVICE_NAME,
+				'service_address': ''
 			}
 		}
 		self.update()
+		
+		if self._available():
+			config_port = config.readSetting('www','port')
+			if self.service_added:
+				service_port = self.service_address.split(':')[1]
+				if int(config_port) != int(service_port):
+					if self.updateService(config_port):
+						time.sleep(10)
+						self.update()
+			elif self.device_registered:
+				if self.addService(config_port):
+					time.sleep(10)
+					self.update()
 	
 	def execute(self,data):
 		if not self.installed:
@@ -42,6 +62,9 @@ class Cloud:
 			res = self.signOut()
 		elif cmd == 'register_device':
 			res = self.registerDevice(params['name'])
+			if res:
+				config_port = config.readSetting('www','port')
+				self.addService(config_port)
 		elif cmd == 'unregister_device':
 			res = self.unregisterDevice()
 		
@@ -72,12 +95,26 @@ class Cloud:
 		self.INFO['status']['loggedin'] = self.loggedin
 		self.INFO['data']['username'] = username
 		
-		devid = js['data']['device']['id']
-		devname = js['data']['device']['name']
-		self.device_registered = bool(devid)
+		dev_id = js['data']['device']['id']
+		dev_name = js['data']['device']['name']
+		self.device_registered = bool(dev_id)
 		self.INFO['status']['device_registered'] = self.device_registered
-		self.INFO['data']['device_id'] = devid
-		self.INFO['data']['device_name'] = devname
+		self.INFO['data']['device_id'] = dev_id
+		self.INFO['data']['device_name'] = dev_name
+		
+		self.service_id = ''
+		self.service_address = ''
+		for service in js['data']['services']:
+			if bool(service['isDeviceService']):
+				continue
+			if service['name'] == self._SERVICE_NAME:
+				self.service_id = service['id']
+				self.service_address = service['address']
+				break
+		self.service_added = bool(self.service_id)
+		self.INFO['status']['service_added'] = self.service_added
+		self.INFO['data']['service_id'] = self.service_id
+		self.INFO['data']['service_address'] = self.service_address
 		
 		return True
 	
@@ -118,13 +155,10 @@ class Cloud:
 	
 	def signIn(self, username, password):
 		if not self.installed or self.loggedin:
-			print("1::", False)
 			return False
 		if not(bool(username) and bool(password)):
-			print("2::", False)
 			return False
 		res = self._exec(["signin","--user", username, "--pass", password])
-		print("3::", res)
 		return res.returncode == 0
 	
 	def signOut(self):
@@ -145,9 +179,20 @@ class Cloud:
 		res = self._exec(["unregister","--yes"])
 		return res.returncode == 0
 	
-"""
-remoteit add --name "loveboxpi" --port <service port> --type HTTP
-remoteit remove --id <service id>
-
-remoteit modify --id <service id> --enable <boolean> --port <port> --type HTTP
-"""
+	def addService(self,port):
+		if not self._available() or not self.device_registered or self.service_added:
+			return False
+		res = self._exec(["add","--name", self._SERVICE_NAME, "--port", port, "--type", "HTTP"])
+		return res.returncode == 0
+	
+	def removeService(self):
+		if not self._available() or not self.device_registered or not self.service_added:
+			return False
+		res = self._exec(["remove","--id", self.service_id])
+		return res.returncode == 0
+	
+	def updateService(self,port):
+		if not self._available() or not self.device_registered or not self.service_added:
+			return False
+		res = self._exec(["modify","--id", self.service_id, "--enable", "true", "--port", port, "--type", "HTTP"])
+		return res.returncode == 0

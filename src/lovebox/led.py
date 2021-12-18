@@ -5,7 +5,10 @@ from . import config
 class Led:
 	def __init__(self):
 		self.led = None
-		self.update()
+	
+	def __del__(self):
+		if self.led is not None:
+			self.led.close()
 	
 	def update(self):
 		if self.led is not None:

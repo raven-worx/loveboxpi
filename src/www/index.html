@@ -40,12 +40,13 @@
 			</ul>
 			<span id="nav-version-text" class="navbar-text me-2"></span>
 			<button id="nav-test-button" type="button" class="btn btn-outline-info me-2">
-			<i class="bi bi-phone-vibrate" role="icon"></i>
-			Test
+				<i class="bi bi-phone-vibrate" role="icon"></i> Test
+			</button>
+			<button id="nav-restart-button" type="button" class="btn btn-outline-warning me-2">
+				<i class="bi bi-arrow-repeat" role="icon"></i> Restart
 			</button>
 			<button id="nav-clear-message-button" type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#clear-dialog">
-			<i class="bi bi-x-square" role="icon"></i>
-			Clear
+				<i class="bi bi-x-square" role="icon"></i> Clear
 			</button>
 		</div>
 	</div>
@@ -175,6 +176,9 @@
 		</fieldset>
 		<fieldset>
 			<legend>Server</legend>
+			<div class="form-text mb-2">
+				<strong>NOTE: Changed server settings are applied upon the next start</strong>
+			</div>
 			<div class="form-group">
 				<label for="server_host">Host</label>
 				<input type="text" minlength="7" maxlength="15" class="form-control" id="server_host" value="0.0.0.0" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
@@ -188,17 +192,17 @@
 		</fieldset>
 		
 	</form>
-	<div class="row">
-	<div class="col">
-	  <button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col">
-		<i class="bi bi-x-square" role="icon"></i> Load
-	  </button>
-	</div>
-	<div class="col-auto">
-	  <button id="save-settings-button" type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
-		<i class="bi bi-check-lg" role="icon"></i> Save
-	  </button>
-	</div>
+	<div class="row mt-3">
+		<div class="col">
+		  <button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col">
+			<i class="bi bi-x-square" role="icon"></i> Load
+		  </button>
+		</div>
+		<div class="col-auto">
+		  <button id="save-settings-button" type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
+			<i class="bi bi-check-lg" role="icon"></i> Save
+		  </button>
+		</div>
 	</div>
 </div>
 
@@ -290,8 +294,8 @@
 					<div class="col-5 text-end" id="cloud-info-value-deviceregistered"></div>
 				</div>
 				<div class="row">
-					<div class="col-7 text-start">Service registered</div>
-					<div class="col-5 text-end" id="cloud-info-value-serviceregistered"></div>
+					<div class="col-7 text-start">Service added</div>
+					<div class="col-5 text-end" id="cloud-info-value-serviceadded"></div>
 				</div>
 			</div>
 		</div>

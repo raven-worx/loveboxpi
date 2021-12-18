@@ -75,7 +75,7 @@ function setButtonLoading(btn, loading) {
 }
 
 function showSuccessMessage(msg) {
-	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
+	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
@@ -83,7 +83,7 @@ function showSuccessMessage(msg) {
 }
 
 function showErrorMessage(msg) {
-	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
+	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
@@ -294,7 +294,7 @@ function retrieveInfo() {
 		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-installed'), cloud.status.installed)
 		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-loggedin'), cloud.status.loggedin)
 		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-deviceregistered'), cloud.status.device_registered)
-		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-serviceregistered'), cloud.status.service_registered)
+		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-serviceadded'), cloud.status.service_added)
 	})
 	.fail(function() {
 		console.error("Failed to retrieve settings")
@@ -357,28 +357,32 @@ $( document ).ready(function() {
 	/*
 		BUTTONS
 	*/
-	$('button#nav-test-button').on( "click", function (event) {
+	$('button#nav-test-button').on("click", function (event) {
 		event.preventDefault()
 		sendCmd('test', {}, $(this))
 	});
-	$('button#send-message-button').on( "click", function (event) {
+	$('button#nav-restart-button').on("click", function (event) {
+		event.preventDefault()
+		sendCmd('restart', {}, $(this))
+	});
+	$('button#send-message-button').on("click", function (event) {
 		event.preventDefault()
 		setMessage( $("button#send-message-button") )
 	});
-	$('button#clear-message-button').on( "click", function (event) {
+	$('button#clear-message-button').on("click", function (event) {
 		event.preventDefault()
 		clearMessage( $("button#nav-clear-message-button") )
 	});
-	$('button#load-settings-button').on( "click", function (event) {
+	$('button#load-settings-button').on("click", function (event) {
 		event.preventDefault()
 		retrieveSettings( $("button#load-settings-button") )
 	});
-	$('button#save-settings-dialog-button').on( "click", function (event) {
+	$('button#save-settings-dialog-button').on("click", function (event) {
 		event.preventDefault()
 		saveSettings( $("button#save-settings-button") )
 	});
 	
-	$('button#cloud-install-dialog-button').on( "click", function (event) {
+	$('button#cloud-install-dialog-button').on("click", function (event) {
 		event.preventDefault()
 		sendCloudCmd(
 			'install',
@@ -386,7 +390,7 @@ $( document ).ready(function() {
 			$('button#cloud-install-button')
 		)
 	});
-	$('button#cloud-login-button').on( "click", function (event) {
+	$('button#cloud-login-button').on("click", function (event) {
 		event.preventDefault()
 		sendCloudCmd(
 			'login',
@@ -394,7 +398,7 @@ $( document ).ready(function() {
 			$(this)
 		)
 	});
-	$('button#cloud-logout-dialog-button').on( "click", function (event) {
+	$('button#cloud-logout-dialog-button').on("click", function (event) {
 		event.preventDefault()
 		sendCloudCmd(
 			'logout',
@@ -402,7 +406,7 @@ $( document ).ready(function() {
 			$('button#cloud-logout-button')
 		)
 	});
-	$('button#cloud-registerdevice-button').on( "click", function (event) {
+	$('button#cloud-registerdevice-button').on("click", function (event) {
 		event.preventDefault()
 		sendCloudCmd(
 			'register_device',
@@ -410,7 +414,7 @@ $( document ).ready(function() {
 			$(this)
 		)
 	});
-	$('button#cloud-unregisterdevice-dialog-button').on( "click", function (event) {
+	$('button#cloud-unregisterdevice-dialog-button').on("click", function (event) {
 		event.preventDefault()
 		sendCloudCmd(
 			'unregister_device',
