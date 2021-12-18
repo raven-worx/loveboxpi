@@ -45,6 +45,19 @@ function decreaseInputValue(item) {
 	return false
 }
 
+function insertGpioOptions(selectEl) {
+	var gpios = [
+		"GPIO2","GPIO3","GPIO4","GPIO17","GPIO27","GPIO22","GPIO10","GPIO9","GPIO11","GPIO5","GPIO6","GPIO13","GPIO19",
+		"GPIO26","GPIO14","GPIO15","GPIO18","GPIO23","GPIO24","GPIO25","GPIO8","GPIO7","GPIO12","GPIO16","GPIO20","GPIO21"
+	]
+	gpios.sort().forEach(item => {
+		selectEl.append($("<option>", {
+			value: item,
+			text: item
+		}));
+	});
+}
+
 function setButtonLoading(btn, loading) {
 	if( !btn ) return;
 	
@@ -77,7 +90,10 @@ function showErrorMessage(msg) {
 	}, 3500);
 }
 
-function sendCmd(cmd, params) {
+function sendCmd(cmd, params, btn) {
+	if( btn )
+		setButtonLoading( btn, true )
+	
 	$.ajax({
 		method: "POST",
 		url: "api/v1/cmd",
@@ -95,14 +111,17 @@ function sendCmd(cmd, params) {
 		showErrorMessage("Failed to initiate command '" + cmd + "'")
 	})
 	.always(function() {
+		if( btn )
+			setButtonLoading( btn, false )
 	});
 }
 
-function setMessage() {
+function setMessage(btn) {
 	var c = $("#editor_canvas").prop("fabric")
 	var imgData = c.toDataURL({format: 'png'}).replace(/^data:image\/png;base64,/, "")
 	
-	setButtonLoading( $("button#send-message-button"), true )
+	if( btn )
+		setButtonLoading( btn, true )
 	
 	$.ajax({
 		method: "POST",
@@ -116,12 +135,14 @@ function setMessage() {
 		showErrorMessage("Failed to set message")
 	})
 	.always(function() {
-		setButtonLoading( $("button#send-message-button"), false )
+		if( btn )
+			setButtonLoading( btn, false )
 	});
 }
 
-function clearMessage() {
-	setButtonLoading( $("button#nav-clear-message-button"), true )
+function clearMessage(btn) {
+	if( btn )
+		setButtonLoading( btn, true )
 	
 	$.ajax({
 		method: "DELETE",
@@ -134,15 +155,19 @@ function clearMessage() {
 		showErrorMessage("Failed to clear message")
 	})
 	.always(function() {
-		setButtonLoading( $("button#nav-clear-message-button"), false )
+		if( btn )
+			setButtonLoading( btn, false )
 	});
 }
 
-function saveSettings() {
+function saveSettings(btn) {
 	var formData = {
 		"led": {
 			"enabled": $("form#settings-form input#led_enabled").is(":checked") ? 1 : 0,
-			"color": $("form#settings-form input#led_color").val()
+			"color": $("form#settings-form input#led_color").val(),
+			"pin_r": $("form#settings-form #led_gpio_r").val(),
+			"pin_g": $("form#settings-form #led_gpio_g").val(),
+			"pin_b": $("form#settings-form #led_gpio_b").val()
 		},
 		"display": {
 			"type": $("form#settings-form #display_type").val(),
@@ -154,7 +179,8 @@ function saveSettings() {
 		}
 	}
 	
-	setButtonLoading( $("button#save-settings-button"), true )
+	if( btn )
+		setButtonLoading( btn, true )
 	
 	$.ajax({
 		method: "POST",
@@ -171,12 +197,14 @@ function saveSettings() {
 		showErrorMessage("Failed to save settings")
 	})
 	.always(function() {
-		setButtonLoading( $("button#save-settings-button"), false )
+		if( btn )
+			setButtonLoading( btn, false )
 	});
 }
 
-function retrieveSettings() {
-	setButtonLoading( $("button#load-settings-button"), true )
+function retrieveSettings(btn) {
+	if( btn )
+		setButtonLoading( btn, true )
 	
 	$.ajax({
 		method: "GET",
@@ -187,6 +215,9 @@ function retrieveSettings() {
 	.done(function(data) {
 		$("form#settings-form #led_enabled").prop('checked', data.led.enabled == "True" || data.led.enabled == "1")
 		$("form#settings-form #led_color").val(data.led.color)
+		$("form#settings-form #led_gpio_r").val(data.led.pin_r)
+		$("form#settings-form #led_gpio_g").val(data.led.pin_g)
+		$("form#settings-form #led_gpio_b").val(data.led.pin_b)
 		
 		$("form#settings-form #display_type").val(data.display.type).change();
 		$("form#settings-form #display_rotation").val(data.display.rotation).change();
@@ -198,7 +229,8 @@ function retrieveSettings() {
 		console.error("Failed to retrieve settings")
 	})
 	.always(function() {
-		setButtonLoading( $("button#load-settings-button"), false )
+		if( btn )
+			setButtonLoading( btn, false )
 	});
 }
 
@@ -212,6 +244,7 @@ function retrieveInfo() {
 	.done(function(data) {
 		$("#navbarContent #nav-version-text").text("v"+data.version)
 		
+		// SETTINGS
 		data.display.available.sort().forEach(item => {
 			$("form#settings-form select#display_type").append($("<option>", {
 				value: item,
@@ -219,29 +252,90 @@ function retrieveInfo() {
 			}));
 		});
 		
+		// CANVAS
 		let canvas = $("#editor_canvas").prop("fabric")
 		if( data.display.effectiveWidth > 0 && data.display.effectiveHeight > 0 ) {
 			canvas.setWidth( data.display.effectiveWidth );
 			canvas.setHeight( data.display.effectiveHeight );
 			canvas.calcOffset();
 		}
+		
+		// CLOUD
+		function enableCloudNav(el,enabled) {
+			if( enabled ) {
+				el.removeClass('disabled')
+				el.removeAttr('tabindex')
+				el.attr('aria-disabled','false')
+			} else {
+				el.addClass('disabled')
+				el.attr('tabindex', '-1')
+				el.attr('aria-disabled','true')
+			}
+		}
+		function showCloudEl(el,show) {
+			show ? el.show() : el.hide()
+		}
+		function setCloudInfoValueIcon(el,check) {
+			el.empty()
+			el.append( check ?  $('<i class="bi bi-check-square-fill text-success" role="icon"></i>') : $('<i class="bi bi-x-square-fill text-danger" role="icon"></i>') )
+		}
+		let cloud = data.cloud
+		enableCloudNav( $('#cloud-page ul.nav a#nav-cloud-login'), cloud.status.installed )
+		enableCloudNav( $('#cloud-page ul.nav a#nav-cloud-register'), cloud.status.installed )
+		$('#cloud-pane-login form#cloud-logout-form #cloud-logout-desc-username').text( cloud.data.username )
+		$('#cloud-pane-register form#cloud-unregisterdevice-form #cloud-unregisterdevice-desc-name').text( cloud.data.device_name || cloud.data.device_id )
+		
+		showCloudEl( $('#cloud-page #cloud-pane-login form#cloud-login-form'), !cloud.status.loggedin )
+		showCloudEl( $('#cloud-page #cloud-pane-login form#cloud-logout-form'), cloud.status.loggedin )
+		showCloudEl( $('#cloud-page #cloud-pane-register form#cloud-registerdevice-form'), !cloud.status.device_registered )
+		showCloudEl( $('#cloud-page #cloud-pane-register form#cloud-unregisterdevice-form'), cloud.status.device_registered )
+		showCloudEl( $('#cloud-page #cloud-pane-info #cloud-info-install-button-row'), !cloud.status.installed )
+		
+		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-installed'), cloud.status.installed)
+		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-loggedin'), cloud.status.loggedin)
+		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-deviceregistered'), cloud.status.device_registered)
+		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-serviceregistered'), cloud.status.service_registered)
 	})
 	.fail(function() {
 		console.error("Failed to retrieve settings")
 	})
 	.always(function() {
-		// clear spinning
 	});
 }
 
+function sendCloudCmd(cmd, params, btn) {
+	if( btn )
+		setButtonLoading( btn, true )
+	
+	$.ajax({
+		method: "POST",
+		url: "api/v1/cloud",
+		data: JSON.stringify({
+			"cmd": cmd,
+			"params": params || {}
+		}),
+		processData: false,
+		contentType: "application/json"
+	})
+	.done(function() {
+		showSuccessMessage("Cloud '" + cmd + "' was successfull")
+		retrieveInfo()
+	})
+	.fail(function() {
+		showErrorMessage("Cloud '" + cmd + "' failed")
+	})
+	.always(function() {
+		if( btn )
+			setButtonLoading( btn, false )
+	});
+}
 
 $( document ).ready(function() {
 	/*
 		NAVIGATION
 	*/
-	var triggerTabList = [].slice.call(document.querySelectorAll('#navbarContent a.nav-link'))
-	triggerTabList.forEach(function (triggerEl) {
-		//var tabTrigger = new bootstrap.Tab(triggerEl)
+	var triggerNavList = [].slice.call(document.querySelectorAll('#navbarContent a.nav-link'))
+	triggerNavList.forEach(function (triggerEl) {
 		var tabTrigger = bootstrap.Tab.getOrCreateInstance(triggerEl)
 
 		triggerEl.addEventListener('click', function (event){
@@ -249,7 +343,89 @@ $( document ).ready(function() {
 			tabTrigger.show()
 		})
 	})
+	
+	var triggerCloudNavList = [].slice.call(document.querySelectorAll('#cloud-page ul.nav a.nav-link'))
+	triggerCloudNavList.forEach(function (triggerEl) {
+		var tabTrigger = bootstrap.Tab.getOrCreateInstance(triggerEl)
 
+		triggerEl.addEventListener('click', function (event){
+			event.preventDefault()
+			tabTrigger.show()
+		})
+	})
+	
+	/*
+		BUTTONS
+	*/
+	$('button#nav-test-button').on( "click", function (event) {
+		event.preventDefault()
+		sendCmd('test', {}, $(this))
+	});
+	$('button#send-message-button').on( "click", function (event) {
+		event.preventDefault()
+		setMessage( $("button#send-message-button") )
+	});
+	$('button#clear-message-button').on( "click", function (event) {
+		event.preventDefault()
+		clearMessage( $("button#nav-clear-message-button") )
+	});
+	$('button#load-settings-button').on( "click", function (event) {
+		event.preventDefault()
+		retrieveSettings( $("button#load-settings-button") )
+	});
+	$('button#save-settings-dialog-button').on( "click", function (event) {
+		event.preventDefault()
+		saveSettings( $("button#save-settings-button") )
+	});
+	
+	$('button#cloud-install-dialog-button').on( "click", function (event) {
+		event.preventDefault()
+		sendCloudCmd(
+			'install',
+			{},
+			$('button#cloud-install-button')
+		)
+	});
+	$('button#cloud-login-button').on( "click", function (event) {
+		event.preventDefault()
+		sendCloudCmd(
+			'login',
+			{'username': $('form#cloud-login-form #cloud-login-email').val(), 'password': $('form#cloud-login-form #cloud-login-password').val()},
+			$(this)
+		)
+	});
+	$('button#cloud-logout-dialog-button').on( "click", function (event) {
+		event.preventDefault()
+		sendCloudCmd(
+			'logout',
+			{},
+			$('button#cloud-logout-button')
+		)
+	});
+	$('button#cloud-registerdevice-button').on( "click", function (event) {
+		event.preventDefault()
+		sendCloudCmd(
+			'register_device',
+			{'name': $('form#cloud-registerdevice-form #cloud-registerdevice-name').val()},
+			$(this)
+		)
+	});
+	$('button#cloud-unregisterdevice-dialog-button').on( "click", function (event) {
+		event.preventDefault()
+		sendCloudCmd(
+			'unregister_device',
+			{},
+			$('button#cloud-unregisterdevice-button')
+		)
+	});
+	
+	/*
+		SETTINGS FORM
+	*/
+	insertGpioOptions( $("form#settings-form #led_gpio_r") )
+	insertGpioOptions( $("form#settings-form #led_gpio_g") )
+	insertGpioOptions( $("form#settings-form #led_gpio_b") )
+	
 	/*
 		DISPLAY EDITOR (fabricjs)
 	*/

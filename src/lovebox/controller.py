@@ -7,7 +7,7 @@ import time
 from . import config
 from . import display
 from . import led
-
+from . import cloud
 
 class Controller:
 	_RUN_DIR = os.getenv("RUNTIME_DIRECTORY", "/tmp")
@@ -19,6 +19,7 @@ class Controller:
 	def __init__(self,version='0.0.0'):
 		self.VERSION = version
 		self.led = led.Led()
+		self.cloud = cloud.Cloud()
 		self.update()
 	
 	def __del__(self):
@@ -90,12 +91,10 @@ class Controller:
 	
 	def test(self):
 		display.writeText("TEST")
-		
 		if self.led.enabled:
 			self.led.on(3) # 3 rounds of pulsating (blocking)
 		else:
 			time.sleep(5)
-		
 		self.restoreState()
 		return True
 	
@@ -103,7 +102,6 @@ class Controller:
 		hostname = socket.gethostname()
 		local_ip = socket.gethostbyname(hostname)
 		display.writeText(hostname + "\n" + local_ip)
-		
 		time.sleep(5)
 		self.restoreState()
 		return True
@@ -111,6 +109,7 @@ class Controller:
 	def getInfoJSON(self):
 		js = {
 			"version": self.VERSION,
-			"display": display.INFO
+			"display": display.INFO,
+			"cloud": self.cloud.INFO
 		}
 		return json.dumps(js)

@@ -23,8 +23,13 @@
 		<div id="navbarContent" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link active" href="#home" role="button" id="nav-home" data-bs-target="#main-page" aria-controls="main-page" aria-selected="true">
-						<i class="bi bi-house" role="icon"></i> Home
+					<a class="nav-link active" href="#home" role="button" id="nav-home" data-bs-target="#message-page" aria-controls="message-page" aria-selected="true">
+						<i class="bi bi-chat-right-text-fill" role="icon"></i> Message
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#cloud" role="button" id="nav-cloud" data-bs-target="#cloud-page" aria-controls="#cloud-page" aria-selected="false">
+						<i class="bi bi-cloud-fill" role="icon"></i> Cloud
 					</a>
 				</li>
 				<li class="nav-item">
@@ -34,7 +39,7 @@
 				</li>
 			</ul>
 			<span id="nav-version-text" class="navbar-text me-2"></span>
-			<button id="nav-test-button" type="button" class="btn btn-outline-info me-2" onclick="return sendCmd("test")">
+			<button id="nav-test-button" type="button" class="btn btn-outline-info me-2">
 			<i class="bi bi-phone-vibrate" role="icon"></i>
 			Test
 			</button>
@@ -52,7 +57,7 @@
 
 <div class="tab-content container" id="pages">
 
-<div class="page tab-pane fade show active" id="main-page" role="tabpanel" aria-labelledby="nav-home">
+<div class="page tab-pane fade show active" id="message-page" role="tabpanel" aria-labelledby="nav-home">
 
 	<div class="row">
 		<div class="col-auto">
@@ -107,7 +112,7 @@
 	
 	<div class="row">
 		<div class="col-auto">
-		  <button id="send-message-button" type="button" class="btn btn-primary btn-lg" onclick="return setMessage()">
+		  <button id="send-message-button" type="button" class="btn btn-primary btn-lg">
 			<i class="bi bi-box-arrow-in-up" role="icon"></i>
 			Send
 		  </button>
@@ -133,6 +138,21 @@
 				<label for="led_color">Color</label>
 				<input type="color" class="form-control form-control-color" name="led_color" id="led_color" value="#ff0000" title="Choose LED color">
 				<small id="led_color_desc" class="form-text text-muted">The color of the LED</small>
+			</div>
+			<div class="form-group">
+				<label for="led_gpio_r">GPIO Pin R</label>
+				<select id="led_gpio_r" name="led_gpio_r" class="form-select"></select>
+				<small id="led_gpio_r_desc" class="form-text text-muted">GPIO pin for the red channel of the LED</small>
+			</div>
+			<div class="form-group">
+				<label for="led_gpio_g">GPIO Pin G</label>
+				<select id="led_gpio_g" name="led_gpio_g" class="form-select"></select>
+				<small id="led_gpio_g_desc" class="form-text text-muted">GPIO pin for the green channel of the LED</small>
+			</div>
+			<div class="form-group">
+				<label for="led_gpio_b">GPIO Pin B</label>
+				<select id="led_gpio_b" name="led_gpio_b" class="form-select"></select>
+				<small id="led_gpio_b_desc" class="form-text text-muted">GPIO pin for the blue channel of the LED</small>
 			</div>
 		</fieldset>
 		<fieldset>
@@ -170,7 +190,7 @@
 	</form>
 	<div class="row">
 	<div class="col">
-	  <button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col" onclick="return retrieveSettings()">
+	  <button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col">
 		<i class="bi bi-x-square" role="icon"></i> Load
 	  </button>
 	</div>
@@ -180,6 +200,104 @@
 	  </button>
 	</div>
 	</div>
+</div>
+
+<div class="page tab-pane fade" id="cloud-page" role="tabpanel" aria-labelledby="nav-cloud">
+
+<div class="card">
+	<div class="card-header">
+		<ul class="nav nav-pills card-header-pills">
+			<li class="nav-item">
+				<a class="nav-link" id="nav-cloud-login" href="#cloud-pane-login" data-bs-target="#cloud-pane-login" aria-controls="#cloud-pane-login" aria-selected="false">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="nav-cloud-register" href="#cloud-pane-register" data-bs-target="#cloud-pane-register" aria-controls="#cloud-pane-register" aria-selected="false">Register</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link active" id="nav-cloud-info" href="#cloud-pane-info" data-bs-target="#cloud-pane-info" aria-controls="#cloud-pane-info" aria-selected="true">Info</a>
+			</li>
+		</ul>
+	</div>
+	<div class="card-body tab-content">
+		<div class="tab-pane fade" id="cloud-pane-login" role="tabpanel" aria-labelledby="nav-cloud-login">
+			<form id="cloud-login-form">
+				<div id="cloud-login-desc" class="form-text mb-3">
+					<div class="fs-6">Enter your <a href="https://remote.it/" target="_blank">remote.it</a> account credentials.</div>
+					<div class="text-wrap fs-6"><strong>NOTE:</strong> SSO account credentials (Google) are not supported.</div>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="email" class="form-control" id="cloud-login-email">
+					<label for="cloud-login-email" class="form-label">Email address</label>
+				</div>
+				<div class="form-floating mb-3">
+					<input type="password" class="form-control" id="cloud-login-password">
+					<label for="cloud-login-password" class="form-label">Password</label>
+				</div>
+				<button id="cloud-login-button" type="button" class="btn btn-primary text-center">
+					<i class="bi bi-person-square" role="icon"></i> Login
+				</button>
+			</form>
+			<form id="cloud-logout-form" class="text-center">
+				<div id="cloud-logout-desc" class="form-text mb-3 fs-6">
+					You are currently logged in as<br>
+					<strong id="cloud-logout-desc-username"></strong>
+				</div>
+				<button id="cloud-logout-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cloud-logout-dialog">
+					<i class="bi bi-person-x-fill" role="icon"></i> Logout
+				</button>
+			</form>
+		</div>
+		<div class="tab-pane fade" id="cloud-pane-register" role="tabpanel" aria-labelledby="nav-cloud-register">
+			<form id="cloud-registerdevice-form">
+				<div class="form-floating mb-3">
+					<input type="text" class="form-control" id="cloud-registerdevice-name" value="LoveboxPi">
+					<label for="cloud-registerdevice-name" class="form-label">Device name</label>
+					<div class="form-text">Specify a name for this device. This name appears in the list of devices in your cloud service.</div>
+				</div>
+				<div class="text-center">
+					<button id="cloud-registerdevice-button" type="button" class="btn btn-primary">
+						<i class="bi bi-cloud-plus" role="icon"></i> Register device
+					</button>
+				</div>
+			</form>
+			<form id="cloud-unregisterdevice-form" class="text-center">
+				<div id="cloud-logout-desc" class="form-text mb-3 fs-6">
+					The device is currently registered as<br>
+					<strong id="cloud-unregisterdevice-desc-name"></strong>
+				</div>
+				<button id="cloud-unregisterdevice-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cloud-unregisterdevice-dialog">
+					<i class="bi bi-cloud-minus" role="icon"></i> Unregister device
+				</button>
+			</form>
+		</div>
+		<div class="tab-pane fade show active" id="cloud-pane-info" role="tabpanel" aria-labelledby="nav-cloud-info">
+			<div class="container">
+				<div class="row">
+					<div class="col-7 text-start">Installed</div>
+					<div class="col-5 text-end" id="cloud-info-value-installed"></div>
+				</div>
+				<div class="text-end" id="cloud-info-install-button-row">
+					<button id="cloud-install-button" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#cloud-install-dialog">
+						<i class="bi bi-cloud-download" role="icon"></i> Install
+					</button>
+				</div>
+				<div class="row">
+					<div class="col-7 text-start">Logged in</div>
+					<div class="col-5 text-end" id="cloud-info-value-loggedin"></div>
+				</div>
+				<div class="row">
+					<div class="col-7 text-start">Device registered</div>
+					<div class="col-5 text-end" id="cloud-info-value-deviceregistered"></div>
+				</div>
+				<div class="row">
+					<div class="col-7 text-start">Service registered</div>
+					<div class="col-5 text-end" id="cloud-info-value-serviceregistered"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 </div>
 
 </div>
@@ -204,7 +322,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="return clearMessage()">Clear</button>
+        <button id="clear-message-button" type="button" class="btn btn-danger" data-bs-dismiss="modal">Clear</button>
       </div>
     </div>
   </div>
@@ -222,7 +340,61 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="return saveSettings()">Save</button>
+        <button id="save-settings-dialog-button" type="button" class="btn btn-success" data-bs-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cloud-install-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cloudInstallDialogLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cloudInstallDialogLabel">Download and install</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to download and install the client required fot the cloud service?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="cloud-install-dialog-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Install</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cloud-logout-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cloudLogoutDialogLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cloudLogoutDialogLabel">Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to logout from the cloud service?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="cloud-logout-dialog-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cloud-unregisterdevice-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cloudUnregisterDeviceDialogLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cloudUnregisterDeviceDialogLabel">Unregister device</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to unregister this device from your cloud service account?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="cloud-unregisterdevice-dialog-button" type="button" class="btn btn-danger" data-bs-dismiss="modal">Unregister</button>
       </div>
     </div>
   </div>

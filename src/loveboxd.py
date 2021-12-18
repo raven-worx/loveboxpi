@@ -36,6 +36,19 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 					self.send_response(500)
 			else:
 				self.send_response(400, "Bad Request: no data provided")
+		elif re.search('/api/v1/cloud', self.path):
+			ctype = cgi.parse_header(self.headers.get('content-type'))
+			if ctype[0] == 'application/json':
+				length = int(self.headers.get('content-length'))
+				data = self.rfile.read(length).decode('utf8')
+				jsonData = json.loads(data)
+				
+				if _controller.cloud.execute(jsonData):
+					self.send_response(200)
+				else:
+					self.send_response(500)
+			else:
+				self.send_response(400, "Bad Request: no data provided")
 		elif re.search('/api/v1/settings', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
 			if ctype[0] == 'application/json':
