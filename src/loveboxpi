@@ -131,7 +131,7 @@ def main():
 	os.chdir(dir+'/www')
 	
 	server = HTTPServer((host, port), HTTPRequestHandler)
-	print('Lovebox (v'+ version +') HTTP Server running on ' + host + ':' + str(port))
+	print('LoveboxPi (v'+ version +') HTTP Server running on ' + host + ':' + str(port))
 	server.serve_forever()
 
 if __name__ == '__main__':

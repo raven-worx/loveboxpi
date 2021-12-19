@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+systemctl --system disable lovebox >/dev/null || true
+systemctl --system stop lovebox >/dev/null || true

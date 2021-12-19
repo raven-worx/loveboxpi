@@ -1,5 +1,5 @@
 [Unit]
-Description=Lovebox webserver/webservice daemon
+Description=LoveboxPi service
 After=network.target
 StartLimitIntervalSec=1
 
@@ -8,10 +8,10 @@ Type=simple
 Restart=always
 RestartSec=1
 KillSignal=SIGINT
-WorkingDirectory=/usr/local/lovebox/
-RuntimeDirectory=lovebox
+WorkingDirectory=/usr/local/loveboxpi/
+RuntimeDirectory=loveboxpi
 RuntimeDirectoryPreserve=yes
-ExecStart=/usr/local/lovebox/loveboxd.py
+ExecStart=/usr/local/loveboxpi/loveboxpi
 
 [Install]
 WantedBy=multi-user.target

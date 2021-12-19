@@ -35,12 +35,12 @@ jobs:
         
       - name: Prepare dist
         run: |
-          mkdir -p dist/usr/local/lovebox
-          mkdir -p dist/etc/lovebox
+          mkdir -p dist/usr/local/loveboxpi
+          mkdir -p dist/etc/loveboxpi
           cp -r deb/* dist/
-          cp -r src/* dist/usr/local/lovebox/
-          cp -r waveshare_epd/RaspberryPi_JetsonNano/python/lib/waveshare_epd dist/usr/local/lovebox/
-          echo -n $VERSION_REF > dist/usr/local/lovebox/VERSION
+          cp -r src/* dist/usr/local/loveboxpi/
+          cp -r waveshare_epd/RaspberryPi_JetsonNano/python/lib/waveshare_epd dist/usr/local/loveboxpi/
+          echo -n $VERSION_REF > dist/usr/local/loveboxpi/VERSION
         env:
           VERSION_REF: ${{ steps.version.outputs.version_num }}
         shell: bash
@@ -48,7 +48,7 @@ jobs:
       - name: Create archive
         run: tar czf $ARCHIVE_NAME -C dist .
         env:
-          ARCHIVE_NAME: lovebox-rpi-ng_${{ steps.version.outputs.version_num }}.tar.gz
+          ARCHIVE_NAME: loveboxpi_${{ steps.version.outputs.version_num }}.tar.gz
       - name: Upload archive artifact
         uses: actions/upload-artifact@v2
         with:
@@ -59,13 +59,13 @@ jobs:
       - name: Build deb package
         uses: jiro4989/build-deb-action@v2
         with:
-          package: lovebox-rpi-ng
+          package: loveboxpi
           package_root: dist
           maintainer: raven-worx
           version: ${{ steps.version.outputs.version_num }}
           arch: 'armhf'
           depends: 'python3,python3-rpi.gpio,python3-spidev,python3-numpy,python3-pil,python3-colormap'
-          desc: 'Lovebox RPi'
+          desc: 'LoveboxPi'
       - name: Upload deb artifact
         uses: actions/upload-artifact@v2
         with:

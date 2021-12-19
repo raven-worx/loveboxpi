@@ -3,7 +3,7 @@ import json
 import configparser
 import copy
 
-_ConfigFilePath = "/etc/lovebox/lovebox.conf"
+_ConfigFilePath = "/etc/loveboxpi/loveboxpi.conf"
 
 _DefaultSettings = {
 	"www": {
