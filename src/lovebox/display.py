@@ -68,6 +68,8 @@ def init():
 def clear():
 	if epd := _EPD():
 		epd.Clear();
+		#image = Image.new('1', (epd.width,epd.height), 255)
+		#epd.display(epd.getbuffer(image))
 		epd.sleep()
 		return True
 	return False

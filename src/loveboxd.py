@@ -103,8 +103,10 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	def do_DELETE(self):
 		global _controller
 		if re.search('/api/v1/display', self.path):
-			_controller.clearMessage()
-			self.send_response(200)
+			if _controller.clearMessage():
+				self.send_response(200)
+			else:
+				self.send_response(500)
 		else:
 			self.send_response(403)
 		self.end_headers()
@@ -140,3 +142,5 @@ if __name__ == '__main__':
 	except Exception:
 		traceback.print_exc(file=sys.stdout)
 	print('Exiting...')
+	global _controller
+	_controller = None # cleanup (gpios, ...)

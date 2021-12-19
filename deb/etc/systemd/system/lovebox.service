@@ -7,6 +7,7 @@ StartLimitIntervalSec=1
 Type=simple
 Restart=always
 RestartSec=1
+KillSignal=SIGINT
 WorkingDirectory=/usr/local/lovebox/
 RuntimeDirectory=lovebox
 RuntimeDirectoryPreserve=yes

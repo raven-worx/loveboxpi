@@ -27,11 +27,8 @@ class Controller:
 	
 	def update(self):
 		display.init()
-		
 		self.led.update()
-		
 		#button.init()
-		
 		self.restoreState()
 	
 	def setMessage(self,imageData64):
@@ -41,12 +38,12 @@ class Controller:
 		f.write(imageData)
 		f.close()
 		
+		self.led.off()
+		
 		display.writeImage(imageData)
 		
 		if self.led.enabled:
 			self.led.on()
-		else:
-			self.led.off()
 		
 		f = open(self._ACTIVE_PATH, "w")
 		f.write("1\n")
@@ -55,8 +52,9 @@ class Controller:
 		return True
 	
 	def clearMessage(self):
-		display.clear()
 		self.led.off()
+		
+		display.clear()
 		
 		f = open(self._ACTIVE_PATH, "w")
 		f.write("0\n")
@@ -77,27 +75,27 @@ class Controller:
 			imageData = f.read()
 			f.close()
 			
+			self.led.off()
+			
 			display.writeImage(imageData)
 			
 			if self.led.enabled:
 				self.led.on()
-			else:
-				self.led.off()
 		else:
 			self.clearMessage()
 		
 		return True
 	
 	def test(self):
+		self.led.off()
 		display.writeText("TEST")
 		if self.led.enabled:
-			self.led.on(3) # 3 rounds of pulsating (blocking)
-		else:
-			time.sleep(5)
+			self.led.on(3) # 3 rounds of pulsating (-> blocking)
 		self.restoreState()
 		return True
 	
 	def showHostInfo(self):
+		self.led.off()
 		hostname = socket.gethostname()
 		local_ip = socket.gethostbyname(hostname)
 		display.writeText(hostname + "\n" + local_ip)
