@@ -62,7 +62,7 @@ function setButtonLoading(btn, loading) {
 }
 
 function showSuccessMessage(msg) {
-	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
+	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px; z-index: 10000;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
@@ -70,7 +70,7 @@ function showSuccessMessage(msg) {
 }
 
 function showErrorMessage(msg) {
-	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
+	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px; z-index: 10000;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
@@ -100,6 +100,40 @@ function sendCmd(cmd, params, btn) {
 	.always(function() {
 		if( btn )
 			setButtonLoading( btn, false )
+	});
+}
+
+function retrieveLastMessageInfo()
+{
+	var loader = $('#last-message-dialog #last-message-loading-indicator')
+	var info = $('#last-message-dialog #last-message-info-container')
+	
+	loader.show()
+	info.hide()
+	info.find('img').attr('src', '')
+	info.find('#last-message-status-active').empty().append('---')
+	info.find('#last-message-status-read').empty().append('---')
+	
+	$.ajax({
+		method: "GET",
+		url: "api/v1/message",
+		cache: false
+	})
+	.done(function(data) {
+		if( data.imageUrl.length != "" )
+		{
+			console.log(data.readTimestamp,data.readTimestamp != "", new Date(data.readTimestamp).toLocaleDateString())
+			info.find('img').attr('src', data.imageUrl)
+			info.find('#last-message-status-active').empty().append( $( data.active ? '<span class="badge bg-success">active</span>' : '<span class="badge bg-secondary">inactive</span>') )
+			info.find('#last-message-status-read').empty().append( $( data.readTimestamp != "" ? '<span class="badge bg-success">read</span> ' : '<span class="badge bg-secondary">unread</span>') ).append( data.readTimestamp != "" ? "<br>" + new Date(data.readTimestamp).toLocaleString() : "" )
+		}
+	})
+	.fail(function() {
+		showErrorMessage("Failed to get last message")
+	})
+	.always(function() {
+		loader.hide()
+		info.show()
 	});
 }
 
@@ -137,6 +171,7 @@ function clearMessage(btn) {
 	})
 	.done(function() {
 		showSuccessMessage("Successfully cleared message");
+		retrieveLastMessageInfo()
 	})
 	.fail(function() {
 		showErrorMessage("Failed to clear message")
@@ -385,13 +420,17 @@ $( document ).ready(function() {
 		event.preventDefault()
 		sendCmd('restart', {}, $(this))
 	});
+	$('button#nav-last-message-button').on("click", function (event) {
+		event.preventDefault()
+		retrieveLastMessageInfo()
+	});
 	$('button#send-message-button').on("click", function (event) {
 		event.preventDefault()
 		setMessage( $("button#send-message-button") )
 	});
-	$('button#clear-message-button').on("click", function (event) {
+	$('button#clear-message-confirm-button').on("click", function (event) {
 		event.preventDefault()
-		clearMessage( $("button#nav-clear-message-button") )
+		clearMessage( $("button#clear-message-button") )
 	});
 	$('button#load-settings-button').on("click", function (event) {
 		event.preventDefault()

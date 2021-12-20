@@ -45,8 +45,8 @@
 			<button id="nav-restart-button" type="button" class="btn btn-outline-warning me-2">
 				<i class="bi bi-arrow-repeat" role="icon"></i> Restart
 			</button>
-			<button id="nav-clear-message-button" type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#clear-dialog">
-				<i class="bi bi-x-square" role="icon"></i> Clear
+			<button id="nav-last-message-button" type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#last-message-dialog">
+				<i class="bi bi-chat-right-dots" role="icon"></i> Message
 			</button>
 		</div>
 	</div>
@@ -224,8 +224,8 @@
 		</fieldset>
 		<fieldset class="mb-3">
 			<legend>Server</legend>
-			<div class="form-text bg-light text-danger mb-2">
-				<strong>NOTE: Altered server settings are applied on the next start</strong>
+			<div class="form-text bg-light border border-warning border-2 mb-2 p-1">
+				<strong>NOTE</strong>: Altered server settings are applied on the next start
 			</div>
 			<div class="form-group mb-2">
 				<label for="server_host">Host</label>
@@ -362,6 +362,42 @@
 
 <!-- modal dialogs -->
 
+<div class="modal fade" id="last-message-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="lastMessageDialogLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lastMessageDialogLabel">Last Message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+			<div class="d-flex justify-content-center">
+				<div id="last-message-loading-indicator" class="spinner-border m-4" style="width: 8rem; height: 8rem;" role="status"></div>
+			
+				<div id="last-message-info-container" class="card w-100" style1="width: 18rem;">
+					<img class="card-img-top">
+					<div class="card-footer">
+						<div class="container card-text">
+							<div class="row justify-content-md-center">
+								<div class="col text-end">Message Status</div>
+								<div id="last-message-status-active" class="col text-start"></div>
+							</div>
+							<div class="row justify-content-md-center">
+								<div class="col text-end">Read Status</div>
+								<div id="last-message-status-read" class="col text-start"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="clear-message-button" type="button" class="btn btn-danger" data-bs-target="#clear-dialog" data-bs-toggle="modal" data-bs-dismiss="modal">Clear Message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="clear-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="clearDialogLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -370,11 +406,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure you want to clear the current message on the display?
+        Are you sure you want to clear the current and also the last cached message on the display?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="clear-message-button" type="button" class="btn btn-danger" data-bs-dismiss="modal">Clear</button>
+        <button type="button" class="btn btn-secondary" data-bs-target="#last-message-dialog" data-bs-toggle="modal" data-bs-dismiss="modal">Close</button>
+        <button id="clear-message-confirm-button" type="button" class="btn btn-danger" data-bs-target="#last-message-dialog" data-bs-toggle="modal" data-bs-dismiss="modal">Clear</button>
       </div>
     </div>
   </div>

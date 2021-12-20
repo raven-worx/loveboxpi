@@ -198,7 +198,7 @@ class Controller:
 	def getLastMessageInfoJSON(self):
 		m = MutexLocker()
 		
-		imgDataUrl = ""
+		imageDataUrl = ""
 		imageData = self._readActiveImage()
 		if imageData:
 			imageDataUrl = "data:image/png;base64," + base64.b64encode(imageData).decode("utf-8")
