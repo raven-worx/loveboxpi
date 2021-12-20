@@ -88,6 +88,7 @@ function sendCmd(cmd, params, btn) {
 			"cmd": cmd,
 			"params": params || {}
 		}),
+		timeout: 10000,
 		processData: false,
 		contentType: "application/json"
 	})
@@ -117,7 +118,8 @@ function retrieveLastMessageInfo()
 	$.ajax({
 		method: "GET",
 		url: "api/v1/message",
-		cache: false
+		cache: false,
+		timeout: 10000
 	})
 	.done(function(data) {
 		if( data.imageUrl.length != "" )
@@ -147,7 +149,8 @@ function setMessage(btn) {
 	$.ajax({
 		method: "POST",
 		url: "api/v1/message",
-		data: { image: imgData }
+		data: { image: imgData },
+		timeout: 10000
 	})
 	.done(function() {
 		showSuccessMessage("Successfully set message")
@@ -167,7 +170,8 @@ function clearMessage(btn) {
 	
 	$.ajax({
 		method: "DELETE",
-		url: "api/v1/message"
+		url: "api/v1/message",
+		timeout: 10000
 	})
 	.done(function() {
 		showSuccessMessage("Successfully cleared message");
@@ -229,7 +233,8 @@ function saveSettings(btn) {
 		url: "api/v1/settings",
 		data: JSON.stringify(formData),
 		processData: false,
-		contentType: "application/json"
+		contentType: "application/json",
+		timeout: 10000
 	})
 	.done(function() {
 		showSuccessMessage("Successfully saved settings")
@@ -252,7 +257,8 @@ function retrieveSettings(btn) {
 		method: "GET",
 		url: "api/v1/settings",
 		cache: false,
-		contentType: "application/json"
+		contentType: "application/json",
+		timeout: 10000
 	})
 	.done(function(data) {
 		$("form#settings-form #led_enabled").prop('checked', data.led.enabled == "True" || data.led.enabled == "1")
@@ -294,7 +300,8 @@ function retrieveInfo() {
 		method: "GET",
 		url: "api/v1/info",
 		cache: false,
-		contentType: "application/json"
+		contentType: "application/json",
+		timeout: 10000
 	})
 	.done(function(data) {
 		$("#navbarContent #nav-version-text").text("v"+data.version)
@@ -370,7 +377,8 @@ function sendCloudCmd(cmd, params, btn) {
 			"params": params || {}
 		}),
 		processData: false,
-		contentType: "application/json"
+		contentType: "application/json",
+		timeout: 10000
 	})
 	.done(function() {
 		showSuccessMessage("Cloud '" + cmd + "' was successfull")
