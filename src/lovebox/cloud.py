@@ -49,6 +49,12 @@ class Cloud:
 					time.sleep(10)
 					self.update()
 	
+	def __del__(self):
+		self.cleanup()
+	
+	def cleanup(self):
+		pass
+	
 	def execute(self,data):
 		if not self.installed:
 			return False

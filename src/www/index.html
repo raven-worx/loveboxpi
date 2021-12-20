@@ -126,42 +126,90 @@
 <div class="page tab-pane fade" id="settings-page" role="tabpanel" aria-labelledby="nav-settings">
 
 	<form id="settings-form">
-		<fieldset>
+		<fieldset class="mb-3">
 			<legend>LED</legend>
-			<div class="form-group">
-				<label for="led_enabled">Enabled</label>
-				<div class="form-check">
-					<input class="form-check-input position-static" type="checkbox" id="led_enabled" value="led_enabled">
+			<div class="form-group mb-2">
+				<div class="input-group">
+					<div class="input-group-text">
+						<input id="led_enabled" class="form-check-input mt-0" type="checkbox" aria-label="LED enabled">
+					</div>
+					<div class="input-group-text">
+						Enabled
+					</div>
 				</div>
-				<small id="led_enabled_desc" class="form-text text-muted">Should the LED pulsate on a new message</small>
+				<small id="led_enabled_desc" class="form-text text-muted">If enabled the RGB LED pulsates on a new message.</small>
 			</div>
-			<div class="form-group">
+			<div class="form-group  mb-2">
 				<label for="led_color">Color</label>
 				<input type="color" class="form-control form-control-color" name="led_color" id="led_color" value="#ff0000" title="Choose LED color">
-				<small id="led_color_desc" class="form-text text-muted">The color of the LED</small>
+				<small id="led_color_desc" class="form-text text-muted">Color of the RGB LED (in hex format)</small>
 			</div>
 			<div class="form-group">
-				<label for="led_gpio_r">GPIO Pin R</label>
-				<select id="led_gpio_r" name="led_gpio_r" class="form-select"></select>
-				<small id="led_gpio_r_desc" class="form-text text-muted">GPIO pin for the red channel of the LED</small>
-			</div>
-			<div class="form-group">
-				<label for="led_gpio_g">GPIO Pin G</label>
-				<select id="led_gpio_g" name="led_gpio_g" class="form-select"></select>
-				<small id="led_gpio_g_desc" class="form-text text-muted">GPIO pin for the green channel of the LED</small>
-			</div>
-			<div class="form-group">
-				<label for="led_gpio_b">GPIO Pin B</label>
-				<select id="led_gpio_b" name="led_gpio_b" class="form-select"></select>
-				<small id="led_gpio_b_desc" class="form-text text-muted">GPIO pin for the blue channel of the LED</small>
+				<label>LED GPIOs</label>
+				<div class="input-group">
+					<span class="input-group-text">R</span>
+					<select id="led_gpio_r" name="led_gpio_r" class="form-select"></select>
+					<span class="input-group-text">G</span>
+					<select id="led_gpio_g" name="led_gpio_g" class="form-select"></select>
+					<span class="input-group-text">B</span>
+					<select id="led_gpio_b" name="led_gpio_b" class="form-select"></select>
+				</div>
+				<small id="led_gpios_desc" class="form-text text-muted">GPIO pins for the connected RGB LED in Broadcom (BCM) pin numbering</small>
 			</div>
 		</fieldset>
-		<fieldset>
-			<legend>Display</legend>
+		<fieldset class="mb-3">
+			<legend>Buttons</legend>
+			<div class="form-text mb-2">
+				Specify the button's enabled state, GPIO pin - in Broadcom (BCM) pin numbering - and the assigned action
+				which should be executed when the button is pressed.
+			</div>
 			<div class="form-group">
+				<label>Button 1</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input id="button1_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 1 enabled">
+					</div>
+					<select id="button1_gpio" name="button1_gpio" class="form-select"></select>
+					<select id="button1_action" name="button1_action" class="form-select"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Button 2</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input id="button2_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 2 enabled">
+					</div>
+					<select id="button2_gpio" name="button2_gpio" class="form-select"></select>
+					<select id="button2_action" name="button2_action" class="form-select"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Button 3</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input id="button3_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 3 enabled">
+					</div>
+					<select id="button3_gpio" name="button3_gpio" class="form-select"></select>
+					<select id="button3_action" name="button3_action" class="form-select"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Button 4</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<input id="button4_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 4 enabled">
+					</div>
+					<select id="button4_gpio" name="button3_gpio" class="form-select"></select>
+					<select id="button4_action" name="button3_action" class="form-select"></select>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset class="mb-3">
+			<legend>Display</legend>
+			<div class="form-group  mb-2">
 				<label for="display_type">Type</label>
 				<select id="display_type" name="display_type" class="form-select"></select>
-				<small id="display_type_desc" class="form-text text-muted">The attached display type of the box</small>
+				<small id="display_type_desc" class="form-text text-muted">Select the attached Waveshare ePaper display type</small>
 			</div>
 			<div class="form-group">
 				<label for="display_rotation">Rotation</label>
@@ -174,20 +222,20 @@
 				<small id="display_rotation_desc" class="form-text text-muted">Rotation of the content displayed</small>
 			</div>
 		</fieldset>
-		<fieldset>
+		<fieldset class="mb-3">
 			<legend>Server</legend>
-			<div class="form-text mb-2">
-				<strong>NOTE: Changed server settings are applied upon the next start</strong>
+			<div class="form-text bg-light text-danger mb-2">
+				<strong>NOTE: Altered server settings are applied on the next start</strong>
 			</div>
-			<div class="form-group">
+			<div class="form-group mb-2">
 				<label for="server_host">Host</label>
 				<input type="text" minlength="7" maxlength="15" class="form-control" id="server_host" value="0.0.0.0" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
-				<small id="server_host_desc" class="form-text text-muted">The interface the webserver should listen on. Use '0.0.0.0' for all interfaces.</small>
+				<small id="server_host_desc" class="form-text text-muted">The network interface the webserver should listen on. Use '0.0.0.0' for all network interfaces (Wifi, LAN, etc).</small>
 			</div>
 			<div class="form-group">
 				<label for="server_port">Port</label>
 				<input type="number" min="0" max="65535" class="form-control" id="server_port" value="80">
-				<small id="server_port_desc" class="form-text text-muted">The port the webserver should listen on. Port '80' is the default for HTTP.</small>
+				<small id="server_port_desc" class="form-text text-muted">The port the webserver should listen on. Port '80' is the default port for HTTP.</small>
 			</div>
 		</fieldset>
 		

@@ -9,8 +9,7 @@ Restart=always
 RestartSec=1
 KillSignal=SIGINT
 WorkingDirectory=/usr/local/loveboxpi/
-RuntimeDirectory=loveboxpi
-RuntimeDirectoryPreserve=yes
+CacheDirectory=loveboxpi
 ExecStart=/usr/local/loveboxpi/loveboxpi
 
 [Install]

@@ -31,7 +31,7 @@ def _EPD(init=True, printError=False):
 		return None
 	return epd
 
-def init():
+def updateInfo():
 	global INFO
 	
 	isfile, path, desc = imp.find_module("waveshare_epd")
@@ -91,14 +91,14 @@ def writeImage(imageData):
 		return True
 	return False
 
-def writeText(text):
+def writeText(text,fontsize=40):
 	if epd := _EPD():
 		image = Image.new('1', (INFO["effectiveWidth"],INFO["effectiveHeight"]), 255)  # 255: clear the frame
 		draw = ImageDraw.Draw(image)
 		
 		defaultFontPath = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf" # '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 		if os.path.isfile(defaultFontPath):
-			f = ImageFont.truetype(defaultFontPath, 40)
+			f = ImageFont.truetype(defaultFontPath, fontsize)
 		else:
 			f = ImageFont.load_default()
 		

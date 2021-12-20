@@ -9,9 +9,6 @@ class LedThread(threading.Thread):
 	def __init__(self, *args, **kwargs):
 		super(LedThread, self).__init__(*args, **kwargs)
 		self._stopEv = threading.Event()
-		self.leds = []
-		self.color = (1,1,1)
-		self.loops = None
 	
 	def stop(self):
 		self._stopEv.set()
@@ -59,29 +56,36 @@ class LedThread(threading.Thread):
 		GPIO.setmode(GPIO.BCM)
 		
 		hz = 75
+		leds = self._kwargs['leds']
+		color = self._kwargs['color']
+		loops = self._kwargs['loops']
 		
-		GPIO.setup(self.leds[0], GPIO.OUT)
-		r = GPIO.PWM(self.leds[0], hz)
+		GPIO.setup(leds[0], GPIO.OUT)
+		r = GPIO.PWM(leds[0], hz)
 		
-		GPIO.setup(self.leds[1], GPIO.OUT)
-		g = GPIO.PWM(self.leds[1], hz)
+		GPIO.setup(leds[1], GPIO.OUT)
+		g = GPIO.PWM(leds[1], hz)
 		
-		GPIO.setup(self.leds[2], GPIO.OUT)
-		b = GPIO.PWM(self.leds[2], hz)
+		GPIO.setup(leds[2], GPIO.OUT)
+		b = GPIO.PWM(leds[2], hz)
 		
-		self._blink_led([r,g,b], on_time=1, off_time=1, fade_in_time=1, fade_out_time=1, on_color=self.color, off_color=(0,0,0), n=self.loops, fps=25)
+		self._blink_led([r,g,b], on_time=1, off_time=1, fade_in_time=1, fade_out_time=1, on_color=color, off_color=(0,0,0), n=loops, fps=25)
 		
-		GPIO.cleanup()
+		GPIO.cleanup(leds[0])
+		GPIO.cleanup(leds[1])
+		GPIO.cleanup(leds[2])
 
 class Led:
 	def __init__(self):
 		self.led = None
 	
 	def __del__(self):
-		if self.led is not None:
-			self.led.stop()
+		self.cleanup()
 	
-	def update(self):
+	def cleanup(self):
+		self.off()
+	
+	def settingsUpdated(self):
 		self.enabled = config.readSetting("led","enabled") == "1"
 	
 	def gpioStrToValue(self,val):
@@ -104,10 +108,7 @@ class Led:
 		tup = hex2rgb(colorHex)
 		color = tuple((tup[0]/255.0, tup[1]/255.0, tup[2]/255.0))
 		
-		self.led = LedThread()
-		self.led.leds = leds
-		self.led.color = color
-		self.led.loops = loops
+		self.led = LedThread(name="LEDHandler", kwargs={'leds': leds, 'color': color, 'loops': loops})
 		self.led.start()
 		
 		if bool(loops):

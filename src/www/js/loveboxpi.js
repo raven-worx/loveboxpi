@@ -45,19 +45,6 @@ function decreaseInputValue(item) {
 	return false
 }
 
-function insertGpioOptions(selectEl) {
-	var gpios = [
-		"GPIO2","GPIO3","GPIO4","GPIO17","GPIO27","GPIO22","GPIO10","GPIO9","GPIO11","GPIO5","GPIO6","GPIO13","GPIO19",
-		"GPIO26","GPIO14","GPIO15","GPIO18","GPIO23","GPIO24","GPIO25","GPIO8","GPIO7","GPIO12","GPIO16","GPIO20","GPIO21"
-	]
-	gpios.sort().forEach(item => {
-		selectEl.append($("<option>", {
-			value: item,
-			text: item
-		}));
-	});
-}
-
 function setButtonLoading(btn, loading) {
 	if( !btn ) return;
 	
@@ -125,7 +112,7 @@ function setMessage(btn) {
 	
 	$.ajax({
 		method: "POST",
-		url: "api/v1/display",
+		url: "api/v1/message",
 		data: { image: imgData }
 	})
 	.done(function() {
@@ -146,7 +133,7 @@ function clearMessage(btn) {
 	
 	$.ajax({
 		method: "DELETE",
-		url: "api/v1/display"
+		url: "api/v1/message"
 	})
 	.done(function() {
 		showSuccessMessage("Successfully cleared message");
@@ -168,6 +155,26 @@ function saveSettings(btn) {
 			"pin_r": $("form#settings-form #led_gpio_r").val(),
 			"pin_g": $("form#settings-form #led_gpio_g").val(),
 			"pin_b": $("form#settings-form #led_gpio_b").val()
+		},
+		"button1": {
+			"enabled": $("form#settings-form input#button1_enabled").is(":checked") ? 1 : 0,
+			"pin": $("form#settings-form #button1_gpio").val(),
+			"action": $("form#settings-form #button1_action").val()
+		},
+		"button2": {
+			"enabled": $("form#settings-form input#button2_enabled").is(":checked") ? 1 : 0,
+			"pin": $("form#settings-form #button2_gpio").val(),
+			"action": $("form#settings-form #button2_action").val()
+		},
+		"button3": {
+			"enabled": $("form#settings-form input#button3_enabled").is(":checked") ? 1 : 0,
+			"pin": $("form#settings-form #button3_gpio").val(),
+			"action": $("form#settings-form #button3_action").val()
+		},
+		"button4": {
+			"enabled": $("form#settings-form input#button4_enabled").is(":checked") ? 1 : 0,
+			"pin": $("form#settings-form #button4_gpio").val(),
+			"action": $("form#settings-form #button4_action").val()
 		},
 		"display": {
 			"type": $("form#settings-form #display_type").val(),
@@ -218,6 +225,19 @@ function retrieveSettings(btn) {
 		$("form#settings-form #led_gpio_r").val(data.led.pin_r)
 		$("form#settings-form #led_gpio_g").val(data.led.pin_g)
 		$("form#settings-form #led_gpio_b").val(data.led.pin_b)
+		
+		$("form#settings-form input#button1_enabled").prop('checked', data.button1.enabled == "True" || data.button1.enabled == "1")
+		$("form#settings-form #button1_gpio").val(data.button1.pin)
+		$("form#settings-form #button1_action").val(data.button1.action)
+		$("form#settings-form input#button2_enabled").prop('checked', data.button2.enabled == "True" || data.button2.enabled == "1")
+		$("form#settings-form #button2_gpio").val(data.button2.pin)
+		$("form#settings-form #button2_action").val(data.button2.action)
+		$("form#settings-form input#button3_enabled").prop('checked', data.button3.enabled == "True" || data.button3.enabled == "1")
+		$("form#settings-form #button3_gpio").val(data.button3.pin)
+		$("form#settings-form #button3_action").val(data.button3.action)
+		$("form#settings-form input#button4_enabled").prop('checked', data.button4.enabled == "True" || data.button4.enabled == "1")
+		$("form#settings-form #button4_gpio").val(data.button4.pin)
+		$("form#settings-form #button4_action").val(data.button4.action)
 		
 		$("form#settings-form #display_type").val(data.display.type).change();
 		$("form#settings-form #display_rotation").val(data.display.rotation).change();
@@ -426,9 +446,34 @@ $( document ).ready(function() {
 	/*
 		SETTINGS FORM
 	*/
-	insertGpioOptions( $("form#settings-form #led_gpio_r") )
-	insertGpioOptions( $("form#settings-form #led_gpio_g") )
-	insertGpioOptions( $("form#settings-form #led_gpio_b") )
+	$( "form#settings-form #led_gpio_r, form#settings-form #led_gpio_g, form#settings-form #led_gpio_b, \
+		form#settings-form #button1_gpio, form#settings-form #button2_gpio, form#settings-form #button3_gpio, form#settings-form #button4_gpio" )
+	.each(function() {
+		for(var i = 2; i <= 27; i++) {
+			var val = "GPIO"+i
+			$(this).append(
+				$("<option>", {
+					value: val,
+					text: val
+				})
+			);
+		}
+	})
+	
+	$( "form#settings-form #button1_action, form#settings-form #button2_action, form#settings-form #button3_action, form#settings-form #button4_action" )
+	.each(function () {
+		var actions = {
+			"_": "---",
+			"read": "Message read",
+			"hostinfo": "Display Host-Info"
+		}
+		for(var a in actions) {
+			$(this).append($("<option>", {
+				value: a,
+				text: actions[a]
+			}));
+		}
+	})
 	
 	/*
 		DISPLAY EDITOR (fabricjs)

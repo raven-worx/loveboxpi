@@ -11,6 +11,7 @@ import sys
 import mimetypes
 import urllib
 import traceback
+import RPi.GPIO as GPIO
 import lovebox.config
 import lovebox.controller
 
@@ -63,7 +64,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 					self.send_response(500)
 			else:
 				self.send_response(400, "Bad Request: no data provided")
-		elif re.search('/api/v1/display', self.path):
+		elif re.search('/api/v1/message', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
 			if ctype[0].startswith('application/x-www-form-urlencoded'):
 				formdata = cgi.FieldStorage(
@@ -91,6 +92,12 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 			self.end_headers()
 			data = _controller.getInfoJSON()
 			self.wfile.write( data.encode('utf8') )
+		elif re.search('/api/v1/message', self.path):
+			self.send_response(200)
+			self.send_header('Content-Type', 'application/json')
+			self.end_headers()
+			data = _controller.getLastMessageInfoJSON()
+			self.wfile.write( data.encode('utf8') )
 		elif re.search('/api/v1/settings', self.path):
 			self.send_response(200)
 			self.send_header('Content-Type', 'application/json')
@@ -102,7 +109,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 	
 	def do_DELETE(self):
 		global _controller
-		if re.search('/api/v1/display', self.path):
+		if re.search('/api/v1/message', self.path):
 			if _controller.clearMessage():
 				self.send_response(200)
 			else:
@@ -135,12 +142,17 @@ def main():
 	server.serve_forever()
 
 if __name__ == '__main__':
+	#GPIO.setwarnings(False) # ignore warnings
 	try:
 		main()
 	except KeyboardInterrupt:
 		print("Shutdown requested.")
 	except Exception:
 		traceback.print_exc(file=sys.stdout)
+	
 	print('Exiting...')
+	
 	global _controller
-	_controller = None # cleanup (gpios, ...)
+	_controller.cleanup()
+	_controller = None
+	GPIO.cleanup()

@@ -14,15 +14,32 @@ _DefaultSettings = {
 		"type": "epd2in7",
 		"rotation": 90
 	},
-	"button": {
-		"pin": 0
+	"button1": {
+		"enabled": 1,
+		"pin": "GPIO5",
+		"action": "read"
+	},
+	"button2": {
+		"enabled": 1,
+		"pin": "GPIO6",
+		"action": "hostinfo"
+	},
+	"button3": {
+		"enabled": 0,
+		"pin": "GPIO13",
+		"action": ""
+	},
+	"button4": {
+		"enabled": 0,
+		"pin": "GPIO19",
+		"action": ""
 	},
 	"led": {
+		"enabled": 1,
+		"color": "#ff0000",
 		"pin_r": "GPIO16",
 		"pin_g": "GPIO20",
-		"pin_b": "GPIO21",
-		"enabled": 1,
-		"color": "#ff0000"
+		"pin_b": "GPIO21"
 	}
 }
 
