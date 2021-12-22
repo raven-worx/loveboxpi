@@ -132,18 +132,27 @@ class Controller:
 	
 	def setMessage(self,imageData64):
 		m = MutexLocker()
-		
 		imageData = base64.b64decode(imageData64)
-		
 		self._writeActiveImage(imageData)
 		self._writeActiveState(active=True)
 		self._writeReadTimestamp(clear=True)
-		
 		self.led.off()
 		display.writeImage(imageData)
 		if self.led.enabled:
 			self.led.on()
-		
+		return True
+	
+	def showLastMessage(self):
+		m = MutexLocker()
+		if self.active_message:
+			return False
+		imageData = self._readActiveImage()
+		if imageData:
+			display.writeImage(imageData)
+		else:
+			display.writeText("No message\nto show", fontsize=(15,25), alignment='center')
+		time.sleep(2)
+		self._restoreState()
 		return True
 	
 	def clearMessage(self):
@@ -162,24 +171,21 @@ class Controller:
 	
 	def test(self):
 		m = MutexLocker()
-		
 		self.led.off()
-		display.writeText("TEST")
+		display.writeText("TEST", fontsize=(30,40))
 		if self.led.enabled:
 			self.led.on(3) # 3 rounds of pulsating (-> blocking)
 		self._restoreState()
 		return True
 	
-	def showHostInfo(self):
+	def showNetInfo(self):
 		m = MutexLocker()
 		self.led.off()
 		hostname = socket.gethostname()
 		local_ip = (([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [[(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["---"])[0]
-		
 		display.writeText(
-			"Hostname: " + hostname + "\n" +
-			"IP: " + local_ip
-			, fontsize=12
+			"Hostname:\n " + hostname + "\nIP:\n " + local_ip,
+			fontsize=(12,20)
 		)
 		time.sleep(1)
 		self._restoreState()
@@ -214,10 +220,14 @@ class Controller:
 		# DO NOT USE MutexLocker in this method -> deadlock
 		# each called method should have a MutexLocker though
 		act = action.lower()
-		if act == "read":
+		if act == "readmsg":
 			self.markMessageRead()
-		elif act == "hostinfo":
-			self.showHostInfo()
+		elif act == "netinfo":
+			self.showNetInfo()
+		elif act == "lastmsg":
+			self.showLastMessage()
+		elif act == "clearmsg":
+			self.clearMessage()
 		else:
 			#raise ValueError("execute_action(): Unknown action",action)
 			print("execute_action(): Unknown action",action)

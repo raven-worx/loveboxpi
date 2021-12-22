@@ -91,18 +91,29 @@ def writeImage(imageData):
 		return True
 	return False
 
-def writeText(text,fontsize=40):
+def writeText(text, fontsize=(12,20), alignment='left'):
 	if epd := _EPD():
-		image = Image.new('1', (INFO["effectiveWidth"],INFO["effectiveHeight"]), 255)  # 255: clear the frame
+		effectiveWidth = INFO["effectiveWidth"]
+		effectiveHeight = INFO["effectiveHeight"]
+		
+		image = Image.new('1', (effectiveWidth,effectiveHeight), 255)  # 255: clear the frame
 		draw = ImageDraw.Draw(image)
+		
+		if effectiveHeight >= effectiveWidth:
+			fs = fontsize[0]
+		else:
+			fs = fontsize[1]
 		
 		defaultFontPath = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf" # '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 		if os.path.isfile(defaultFontPath):
-			f = ImageFont.truetype(defaultFontPath, fontsize)
+			f = ImageFont.truetype(defaultFontPath, fs)
 		else:
 			f = ImageFont.load_default()
 		
-		draw.text((10,10), text, font = f, fill = 0)
+		(width, height) = draw.textsize(text,f)
+		x = (effectiveWidth - width) / 2
+		y = (effectiveHeight - height) / 2
+		draw.text((x,y), text, font = f, fill = 0, align=alignment)
 		epd.display(epd.getbuffer(image))
 		epd.sleep()
 		return True

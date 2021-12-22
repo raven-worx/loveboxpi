@@ -510,9 +510,10 @@ $( document ).ready(function() {
 	$( "form#settings-form #button1_action, form#settings-form #button2_action, form#settings-form #button3_action, form#settings-form #button4_action" )
 	.each(function () {
 		var actions = {
-			"_": "---",
-			"read": "Message read",
-			"hostinfo": "Display Host-Info"
+			"readmsg": "Mark message read",
+			"netinfo": "Display network info",
+			"lastmsg": "Show last message",
+			"clearmsg": "Clear message"
 		}
 		for(var a in actions) {
 			$(this).append($("<option>", {
