@@ -35,6 +35,7 @@ class Controller:
 	def __init__(self,version='0.0.0'):
 		self.VERSION = version
 		self.active_message = self._readActiveState()
+		self.display = display.Display()
 		self.led = led.Led()
 		self.cloud = cloud.Cloud()
 		self.buttons = []
@@ -102,7 +103,7 @@ class Controller:
 	
 	def _clearState(self):
 		self.led.off()
-		display.clear()
+		self.display.clear()
 		self._writeActiveState(active=False)
 	
 	def _restoreState(self):
@@ -111,7 +112,7 @@ class Controller:
 			imageData = self._readActiveImage()
 			if imageData:
 				self.led.off()
-				display.writeImage(imageData)
+				self.display.writeImage(imageData)
 				if self.led.enabled:
 					self.led.on()
 			else:
@@ -123,8 +124,6 @@ class Controller:
 	
 	def update(self):
 		m = MutexLocker()
-		
-		display.updateInfo()
 		self.led.settingsUpdated()
 		for b in self.buttons:
 			b.settingsUpdated()
@@ -137,7 +136,7 @@ class Controller:
 		self._writeActiveState(active=True)
 		self._writeReadTimestamp(clear=True)
 		self.led.off()
-		display.writeImage(imageData)
+		self.display.writeImage(imageData)
 		if self.led.enabled:
 			self.led.on()
 		return True
@@ -148,9 +147,9 @@ class Controller:
 			return False
 		imageData = self._readActiveImage()
 		if imageData:
-			display.writeImage(imageData)
+			self.display.writeImage(imageData)
 		else:
-			display.writeText("No message\nto show", fontsize=(15,25), alignment='center')
+			self.display.writeText("No message\nto show", fontsize=(15,25), alignment='center')
 		time.sleep(2)
 		self._restoreState()
 		return True
@@ -172,7 +171,7 @@ class Controller:
 	def test(self):
 		m = MutexLocker()
 		self.led.off()
-		display.writeText("TEST", fontsize=(30,40))
+		self.display.writeText("TEST", fontsize=(30,40))
 		if self.led.enabled:
 			self.led.on(3) # 3 rounds of pulsating (-> blocking)
 		self._restoreState()
@@ -183,7 +182,7 @@ class Controller:
 		self.led.off()
 		hostname = socket.gethostname()
 		local_ip = (([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [[(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["---"])[0]
-		display.writeText(
+		self.display.writeText(
 			"Hostname:\n " + hostname + "\nIP:\n " + local_ip,
 			fontsize=(12,20)
 		)
@@ -193,17 +192,15 @@ class Controller:
 	
 	def getInfoJSON(self):
 		m = MutexLocker()
-		
 		js = {
 			"version": self.VERSION,
-			"display": display.INFO,
+			"display": self.display.INFO,
 			"cloud": self.cloud.INFO
 		}
 		return json.dumps(js)
 	
 	def getLastMessageInfoJSON(self):
 		m = MutexLocker()
-		
 		imageDataUrl = ""
 		imageData = self._readActiveImage()
 		if imageData:

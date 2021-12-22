@@ -219,9 +219,13 @@
 		</fieldset>
 		<fieldset class="mb-3">
 			<legend>Display</legend>
+			<div class="form-text bg-light border border-warning border-2 mb-2 p-1">
+				Display setting changes require a restart to take effect
+			</div>
 			<div class="form-group  mb-2">
 				<label for="display_type">Type</label>
-				<select id="display_type" name="display_type" class="form-select"></select>
+				<select id="display_type" name="display_type" class="form-select" required></select>
+				<div class="invalid-feedback">No display type selected</div>
 				<small id="display_type_desc" class="form-text text-muted">Select the attached Waveshare ePaper display type</small>
 			</div>
 			<div class="form-group">
@@ -238,7 +242,7 @@
 		<fieldset class="mb-3">
 			<legend>Server</legend>
 			<div class="form-text bg-light border border-warning border-2 mb-2 p-1">
-				<strong>NOTE</strong>: Altered server settings are applied on the next start
+				Server setting changes require a restart to take effect
 			</div>
 			<div class="form-group mb-2">
 				<label for="server_host">Host</label>

@@ -307,6 +307,10 @@ function validateSettingsForm() {
 	_setValid(btn4_gpio, btn4_valid)
 	valid = btn4_valid && valid
 	
+	// DISPLAY
+	
+	valid = _checkNativeValidity( $("form#settings-form select#display_type") ) && valid
+	
 	// SERVER
 	
 	valid = _checkNativeValidity( $("form#settings-form #server_host") ) && valid
@@ -441,7 +445,7 @@ function retrieveInfo() {
 		$("#navbarContent #nav-version-text").text("v"+data.version)
 		
 		// SETTINGS
-		data.display.available.sort().forEach(item => {
+		data.display.availableTypes.sort().forEach(item => {
 			$("form#settings-form select#display_type").append($("<option>", {
 				value: item,
 				text: item
