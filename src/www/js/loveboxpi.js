@@ -45,6 +45,39 @@ function decreaseInputValue(item) {
 	return false
 }
 
+// h[0,360],s[0,1],v[0,1] -> r[0,1],g[0,1],b[0,1]
+function hsv2rgb(hsv) 
+{
+	let f= (n,k=(n+hsv.h/60)%6) => hsv.v - hsv.v*hsv.s*Math.max( Math.min(k,4-k,1), 0)
+	return {r: f(5), g: f(3), b: f(1)}
+}
+
+// r[0,1],g[0,1],b[0,1] -> h[0,360],s[0,1],v[0,1]
+function rgb2hsv(rgb) {
+	let v=Math.max(rgb.r,rgb.g,rgb.b), n=v-Math.min(rgb.r,rgb.g,rgb.b)
+	let h= n && ((v==rgb.r) ? (rgb.g-rgb.b)/n : ((v==rgb.g) ? 2+(rgb.b-rgb.r)/n : 4+(rgb.r-rgb.g)/n))
+	return {h: 60*(h<0?h+6:h), s: v&&n/v, v: v}
+}
+
+// r[0,1],g[0,1],b[0,1] -> '#rrggbb'
+function rgb2hex(rgb) {
+	r = Math.round(rgb.r*255).toString(16);
+	if (r.length == 1) r = "0" + r;
+	g = Math.round(rgb.g*255).toString(16);
+	if (g.length == 1) g = "0" + g;
+	b = Math.round(rgb.b*255).toString(16);
+	if (b.length == 1) b = "0" + b;
+	return "#"+r+g+b
+}
+
+// '#rrggbb' -> r[0,1],g[0,1],b[0,1]
+function hex2rgb(hex) {
+	r = +("0x"+hex[1]+hex[2])
+	g = +("0x"+hex[3]+hex[4])
+	b = +("0x"+hex[5]+hex[6])
+	return {r: (r/255.0).toFixed(1), g: (g/255.0).toFixed(1), b: (b/255.0).toFixed(1)}
+}
+
 function setButtonLoading(btn, loading) {
 	if( !btn ) return;
 	
@@ -88,15 +121,15 @@ function sendCmd(cmd, params, btn) {
 			"cmd": cmd,
 			"params": params || {}
 		}),
-		timeout: 10000,
+		timeout: 30000,
 		processData: false,
 		contentType: "application/json"
 	})
 	.done(function() {
-		showSuccessMessage("Successfully initiated command '" + cmd + "'")
+		showSuccessMessage("Successfully executed command '" + cmd + "'")
 	})
 	.fail(function() {
-		showErrorMessage("Failed to initiate command '" + cmd + "'")
+		showErrorMessage("Failed to execute command '" + cmd + "'")
 	})
 	.always(function() {
 		if( btn )
@@ -286,7 +319,7 @@ function saveSettings(btn) {
 	var formData = {
 		"led": {
 			"enabled": $("form#settings-form input#led_enabled").is(":checked") ? 1 : 0,
-			"color": $("form#settings-form input#led_color").val(),
+			"color": $("form#settings-form #led_color_value").text().trim(),
 			"pin_r": $("form#settings-form #led_gpio_r").val(),
 			"pin_g": $("form#settings-form #led_gpio_g").val(),
 			"pin_b": $("form#settings-form #led_gpio_b").val()
@@ -358,10 +391,13 @@ function retrieveSettings(btn) {
 	})
 	.done(function(data) {
 		$("form#settings-form #led_enabled").prop('checked', data.led.enabled == "True" || data.led.enabled == "1")
-		$("form#settings-form #led_color").val(data.led.color)
 		$("form#settings-form #led_gpio_r").val(data.led.pin_r)
 		$("form#settings-form #led_gpio_g").val(data.led.pin_g)
 		$("form#settings-form #led_gpio_b").val(data.led.pin_b)
+		
+		let color_rgb = hex2rgb(data.led.color || '#ff0000')
+		let color_hsv = rgb2hsv(color_rgb)
+		$("form#settings-form #led_color_slider").val(360*color_hsv.h).change()
 		
 		$("form#settings-form input#button1_enabled").prop('checked', data.button1.enabled == "True" || data.button1.enabled == "1")
 		$("form#settings-form #button1_gpio").val(data.button1.pin)
@@ -592,6 +628,15 @@ $( document ).ready(function() {
 	/*
 		SETTINGS FORM
 	*/
+	$("form#settings-form #led_color_slider").on("input change", function (event) {
+		event.preventDefault()
+		
+		let hsv = {h: $(this).val(), s: 1, v: 1}
+		let hex = rgb2hex(hsv2rgb(hsv))
+		$("form#settings-form #led_color_value").text(hex)
+		$("form#settings-form #led_color_value").css('background-color', hex)
+	});
+	
 	$( 'form#settings-form select[data-role="gpio-select"]' )
 	.each(function() {
 		$(this).append(

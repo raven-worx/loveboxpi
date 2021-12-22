@@ -128,6 +128,9 @@
 	<form id="settings-form" class="needs-validation" novalidate>
 		<fieldset class="mb-3">
 			<legend>LED</legend>
+			<div class="form-text mb-2">
+				The LED is used to notify about a new message received.
+			</div>
 			<div class="form-group mb-2">
 				<div class="input-group">
 					<div class="input-group-text">
@@ -137,12 +140,17 @@
 						Enabled
 					</div>
 				</div>
-				<small id="led_enabled_desc" class="form-text text-muted">If enabled the RGB LED pulsates on a new message.</small>
+				<small id="led_enabled_desc" class="form-text text-muted">Specifies if the LED functionality should be used or not.</small>
 			</div>
-			<div class="form-group  mb-2">
+			<div class="form-group mb-2">
 				<label for="led_color">Color</label>
-				<input type="color" class="form-control form-control-color" name="led_color" id="led_color" value="#ff0000" title="Choose LED color">
-				<small id="led_color_desc" class="form-text text-muted">Color of the RGB LED (in hex format)</small>
+				<div class="input-group w-100">
+					<div class="input-group-text w-75">
+						<input type="range" class="form-range w-100" name="led_color_slider" id="led_color_slider" min="0" max="360" value="0" step="1">
+					</div>
+					<span class="input-group-text user-select-all" id="led_color_value" style="background-color:red; color: white; text-shadow: black 0px 0px 3px;">#ff0000</span>
+				</div>
+				<small id="led_color_desc" class="form-text text-muted">Color of the RGB LED</small>
 			</div>
 			<div class="form-group">
 				<label>LED GPIOs</label>
