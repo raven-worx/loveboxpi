@@ -125,7 +125,7 @@
 
 <div class="page tab-pane fade" id="settings-page" role="tabpanel" aria-labelledby="nav-settings">
 
-	<form id="settings-form">
+	<form id="settings-form" class="needs-validation" novalidate>
 		<fieldset class="mb-3">
 			<legend>LED</legend>
 			<div class="form-group mb-2">
@@ -146,13 +146,14 @@
 			</div>
 			<div class="form-group">
 				<label>LED GPIOs</label>
-				<div class="input-group">
+				<div class="input-group has-validation">
 					<span class="input-group-text">R</span>
-					<select id="led_gpio_r" name="led_gpio_r" class="form-select"></select>
+					<select id="led_gpio_r" name="led_gpio_r" class="form-select" data-role="gpio-select" data-role-enabled-handler="#led_enabled"></select>
 					<span class="input-group-text">G</span>
-					<select id="led_gpio_g" name="led_gpio_g" class="form-select"></select>
+					<select id="led_gpio_g" name="led_gpio_g" class="form-select" data-role="gpio-select" data-role-enabled-handler="#led_enabled"></select>
 					<span class="input-group-text">B</span>
-					<select id="led_gpio_b" name="led_gpio_b" class="form-select"></select>
+					<select id="led_gpio_b" name="led_gpio_b" class="form-select" data-role="gpio-select" data-role-enabled-handler="#led_enabled"></select>
+					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
 				</div>
 				<small id="led_gpios_desc" class="form-text text-muted">GPIO pins for the connected RGB LED in Broadcom (BCM) pin numbering</small>
 			</div>
@@ -165,42 +166,46 @@
 			</div>
 			<div class="form-group">
 				<label>Button 1</label>
-				<div class="input-group">
+				<div class="input-group has-validation">
 					<div class="input-group-text">
 						<input id="button1_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 1 enabled">
 					</div>
-					<select id="button1_gpio" name="button1_gpio" class="form-select"></select>
-					<select id="button1_action" name="button1_action" class="form-select"></select>
+					<select id="button1_gpio" name="button1_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button1_enabled"></select>
+					<select id="button1_action" name="button1_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button1_enabled"></select>
+					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label>Button 2</label>
-				<div class="input-group">
+				<div class="input-group has-validation">
 					<div class="input-group-text">
 						<input id="button2_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 2 enabled">
 					</div>
-					<select id="button2_gpio" name="button2_gpio" class="form-select"></select>
-					<select id="button2_action" name="button2_action" class="form-select"></select>
+					<select id="button2_gpio" name="button2_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button2_enabled"></select>
+					<select id="button2_action" name="button2_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button2_enabled"></select>
+					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label>Button 3</label>
-				<div class="input-group">
+				<div class="input-group has-validation">
 					<div class="input-group-text">
 						<input id="button3_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 3 enabled">
 					</div>
-					<select id="button3_gpio" name="button3_gpio" class="form-select"></select>
-					<select id="button3_action" name="button3_action" class="form-select"></select>
+					<select id="button3_gpio" name="button3_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button3_enabled"></select>
+					<select id="button3_action" name="button3_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button3_enabled"></select>
+					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label>Button 4</label>
-				<div class="input-group">
+				<div class="input-group has-validation">
 					<div class="input-group-text">
 						<input id="button4_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 4 enabled">
 					</div>
-					<select id="button4_gpio" name="button3_gpio" class="form-select"></select>
-					<select id="button4_action" name="button3_action" class="form-select"></select>
+					<select id="button4_gpio" name="button4_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button4_enabled"></select>
+					<select id="button4_action" name="button4_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button4_enabled"></select>
+					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 		</fieldset>
@@ -230,11 +235,13 @@
 			<div class="form-group mb-2">
 				<label for="server_host">Host</label>
 				<input type="text" minlength="7" maxlength="15" class="form-control" id="server_host" value="0.0.0.0" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
-				<small id="server_host_desc" class="form-text text-muted">The network interface the webserver should listen on. Use '0.0.0.0' for all network interfaces (Wifi, LAN, etc).</small>
+				<div class="invalid-feedback">Specify a valid IP address ("[0-254].[0-254].[0-254].[0-254]").</div>
+				<small id="server_host_desc" class="form-text text-muted">The IP address of the network interface the webserver should listen on. The last section should end with '0'. Use '0.0.0.0' for all network interfaces (Wifi, LAN, etc).</small>
 			</div>
 			<div class="form-group">
 				<label for="server_port">Port</label>
-				<input type="number" min="0" max="65535" class="form-control" id="server_port" value="80">
+				<input type="number" min="1" max="65535" class="form-control" id="server_port" value="80">
+				<div class="invalid-feedback">Specify a valid port number in the range from 1 to 65535.</div>
 				<small id="server_port_desc" class="form-text text-muted">The port the webserver should listen on. Port '80' is the default port for HTTP.</small>
 			</div>
 		</fieldset>

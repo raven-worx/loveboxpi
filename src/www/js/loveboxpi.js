@@ -186,6 +186,102 @@ function clearMessage(btn) {
 	});
 }
 
+function validateSettingsForm() {
+	function _setValid(el, valid, groupValid) {
+		groupValid = typeof groupValid !== 'undefined' ? groupValid : valid;
+		let validity = el.get(0).validity
+		el.get(0).setCustomValidity( valid ? '' : 'invalid' )
+		el.get(0).reportValidity()
+		let formGroup = el.parents('.form-group')
+		if( valid && groupValid )
+			formGroup.removeClass( 'was-validated' )
+		else
+			formGroup.addClass( 'was-validated' )
+	}
+	function _checkNativeValidity(el) {
+		let validity = el.get(0).validity
+		let formGroup = el.parents('.form-group')
+		if( validity.valid )
+			formGroup.removeClass( 'was-validated' )
+		else
+			formGroup.addClass( 'was-validated' )
+		return validity.valid
+	}
+	function _countElement(item,array) {
+		var count = 0;
+		$.each(array, function(i,v) { if (v === item) count++; });
+		return count;
+	}
+	function _removeElement(item,array) {
+		array = $.grep(array, function(value) {
+			return value != item;
+		});
+	}
+	
+	let valid = true
+	
+	// GPIOS
+	
+	let selectedGpioValues = []
+	let gpioSelects = $( 'form#settings-form select[data-role="gpio-select"]' )
+	gpioSelects.each(function() {
+		var enabledHander = $($(this).data('role-enabled-handler'))
+		if( !enabledHander || enabledHander.is(":checked") ) {
+			var val = $(this).val()
+			if( val != "" ) selectedGpioValues.push( val )
+		}
+	})
+
+	// LED
+	let led_enabled = $("form#settings-form input#led_enabled").is(":checked")
+	
+	let led_r_gpio = $("form#settings-form #led_gpio_r")
+	let led_r_valid = !led_enabled || _countElement(led_r_gpio.val(),selectedGpioValues) == 1
+	let led_g_gpio = $("form#settings-form #led_gpio_g")
+	let led_g_valid = !led_enabled || _countElement(led_g_gpio.val(),selectedGpioValues) == 1
+	let led_b_gpio = $("form#settings-form #led_gpio_b")
+	let led_b_valid = !led_enabled || _countElement(led_b_gpio.val(),selectedGpioValues) == 1
+	let led_rgb_valid = led_r_valid && led_g_valid && led_b_valid
+	
+	_setValid(led_r_gpio, led_r_valid, led_rgb_valid)
+	_setValid(led_g_gpio, led_g_valid, led_rgb_valid)
+	_setValid(led_b_gpio, led_b_valid, led_rgb_valid)
+	valid = led_rgb_valid && valid
+	
+	// BUTTON ACTIONS
+	
+	let btn1_enabled = $("form#settings-form input#button1_enabled").is(":checked")
+	let btn1_gpio = $("form#settings-form #button1_gpio")
+	let btn1_valid = !btn1_enabled || _countElement(btn1_gpio.val(),selectedGpioValues) == 1
+	_setValid(btn1_gpio, btn1_valid)
+	valid = btn1_valid && valid
+	
+	let btn2_enabled = $("form#settings-form input#button2_enabled").is(":checked")
+	let btn2_gpio = $("form#settings-form #button2_gpio")
+	let btn2_valid = !btn2_enabled || _countElement(btn2_gpio.val(),selectedGpioValues) == 1
+	_setValid(btn2_gpio, btn2_valid)
+	valid = btn2_valid && valid
+	
+	let btn3_enabled = $("form#settings-form input#button3_enabled").is(":checked")
+	let btn3_gpio = $("form#settings-form #button3_gpio")
+	let btn3_valid = !btn3_enabled || _countElement(btn3_gpio.val(),selectedGpioValues) == 1
+	_setValid(btn3_gpio, btn3_valid)
+	valid = btn3_valid && valid
+	
+	let btn4_enabled = $("form#settings-form input#button4_enabled").is(":checked")
+	let btn4_gpio = $("form#settings-form #button4_gpio")
+	let btn4_valid = !btn4_enabled || _countElement(btn4_gpio.val(),selectedGpioValues) == 1
+	_setValid(btn4_gpio, btn4_valid)
+	valid = btn4_valid && valid
+	
+	// SERVER
+	
+	valid = _checkNativeValidity( $("form#settings-form #server_host") ) && valid
+	valid = _checkNativeValidity( $("form#settings-form #server_port") ) && valid
+	
+	return valid
+}
+
 function saveSettings(btn) {
 	var formData = {
 		"led": {
@@ -285,6 +381,8 @@ function retrieveSettings(btn) {
 		
 		$("form#settings-form #server_host").val(data.www.host);
 		$("form#settings-form #server_port").val(data.www.port);
+		
+		validateSettingsForm()
 	})
 	.fail(function() {
 		console.error("Failed to retrieve settings")
@@ -446,7 +544,8 @@ $( document ).ready(function() {
 	});
 	$('button#save-settings-dialog-button').on("click", function (event) {
 		event.preventDefault()
-		saveSettings( $("button#save-settings-button") )
+		if( validateSettingsForm() )
+			saveSettings( $("button#save-settings-button") )
 	});
 	
 	$('button#cloud-install-dialog-button').on("click", function (event) {
@@ -493,9 +592,14 @@ $( document ).ready(function() {
 	/*
 		SETTINGS FORM
 	*/
-	$( "form#settings-form #led_gpio_r, form#settings-form #led_gpio_g, form#settings-form #led_gpio_b, \
-		form#settings-form #button1_gpio, form#settings-form #button2_gpio, form#settings-form #button3_gpio, form#settings-form #button4_gpio" )
+	$( 'form#settings-form select[data-role="gpio-select"]' )
 	.each(function() {
+		$(this).append(
+				$("<option>", {
+					value: '',
+					text: ''
+				})
+			);
 		for(var i = 2; i <= 27; i++) {
 			var val = "GPIO"+i
 			$(this).append(
@@ -507,8 +611,15 @@ $( document ).ready(function() {
 		}
 	})
 	
-	$( "form#settings-form #button1_action, form#settings-form #button2_action, form#settings-form #button3_action, form#settings-form #button4_action" )
+	$( 'form#settings-form select[data-role="action-select"]' )
 	.each(function () {
+		$(this).append(
+				$("<option>", {
+					disabled: true,
+					value: '',
+					text: ''
+				})
+			);
 		var actions = {
 			"readmsg": "Mark message read",
 			"netinfo": "Display network info",
