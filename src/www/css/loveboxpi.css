@@ -1,9 +1,32 @@
 @charset "UTF-8";
 
+/*
+EmojiSymbols Font (c)blockworks - Kenichi Kaneko
+http://emojisymbols.com/
+*/
+@font-face {
+	font-family: 'EmojiSymbols';
+	src: url('fonts/emojisymbols-regular.woff') format('woff');
+}
+
 content {
-    padding: 0.1rem;
+	padding: 0.1rem;
 }
 
 div.page {
 	padding: 1.2rem;
+}
+
+div#editor-emoji-pane div#emoji-list-recent {
+	background: lightgrey;
+}
+
+div#editor-emoji-pane div#emoji-list-all {
+	height: 150px;
+}
+
+div#editor-emoji-pane .emoji-button {
+	font-size: 1.8em;
+	font-family: "EmojiSymbols" !important;
+	margin: 2px;
 }

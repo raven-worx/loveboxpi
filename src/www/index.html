@@ -61,63 +61,57 @@
 <div class="page tab-pane fade show active" id="message-page" role="tabpanel" aria-labelledby="nav-home">
 
 	<div class="row">
-		<div class="col-auto">
+		<div class="col-12 d-flex justify-content-center">
 			<div class="btn-toolbar" role="toolbar" aria-label="Editor Toolbar">
 				<div class="btn-group me-2" role="group" aria-label="Editor Mode">
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_selection" value="selection" autocomplete="off" checked>
 					<label class="btn btn-outline-primary" for="editor_mode_selection"><i class="bi bi-cursor" role="icon"></i></label>
-					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_inserttext" value="inserttext" autocomplete="off">
-					<label class="btn btn-outline-primary" for="editor_mode_inserttext"><i class="bi bi-type" role="icon"></i></label>
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_freedraw" value="freedraw" autocomplete="off">
 					<label class="btn btn-outline-primary" for="editor_mode_freedraw"><i class="bi bi-pen" role="icon"></i></label>
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_eraser" value="eraser" autocomplete="off">
 					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser" role="icon"></i></label>
 				</div>
 				<div class="btn-group" role="group" aria-label="Third group">
-					<button id="editor_clear" type="button" class="btn btn-danger"><i class="bi bi-x-square" role="icon"></i></button>
+					<button id="editor_delete_item" type="button" class="btn btn-danger"><i class="bi bi-trash" role="icon"></i> Delete Item</button>
 				</div>
 			</div>
 		</div>
-		<div class="col-auto">
-			<div class="input-group">
-				<button class="btn btn-outline-secondary" type="button" onclick="return decreaseInputValue('#editor_brush_size')">-</button>
-				<input type="text" class="form-control" id="editor_brush_size" inputmode="numeric" aria-label="Brush size" value="10">
-				<button class="btn btn-outline-secondary" type="button" onclick="return increaseInputValue('#editor_brush_size')">+</button>
-				<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','2')">2</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','3')">3</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','4')">4</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','5')">5</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','8')">8</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','10')">10</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','13')">13</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','16')">16</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','20')">20</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','23')">23</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','30')">30</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','35')">35</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','40')">40</a></li>
-					<li><a class="dropdown-item" href="#" onclick="return setInputValue('#editor_brush_size','50')">50</a></li>
-				</ul>
-			</div>
-
-		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row mt-2 mb-2">
 		<div class="col-12 d-flex justify-content-center">
 			<canvas id="editor_canvas" width="264" height="176" style="border: 1px solid black;"></canvas>
 		</div>
 	</div>
 	
-	<div class="row">
-		<div class="col-auto">
-		  <button id="send-message-button" type="button" class="btn btn-primary btn-lg">
-			<i class="bi bi-box-arrow-in-up" role="icon"></i>
-			Send
-		  </button>
+	<div class="row mb-1">
+		<div class="input-group col-12 d-flex justify-content-center">
+			<span class="input-group-text">Brush size</span>
+			<div class="input-group-text">
+				<input type="range" class="form-range w-100" id="editor_brush_size_slider" min="1" max="80" value="10" step="1">
+			</div>
+			<span class="input-group-text" id="editor_brush_size_value">10</span>
 		</div>
+	</div>
+	<div class="row mb-1">
+		<div class="input-group col-12 d-flex justify-content-center">
+			<span class="input-group-text">Font</span>
+			<select id="editor_text_fontlist" class="form-select" data-role="font-select"></select>
+			<button id="editor_insert_text" class="btn btn-outline-secondary" type="button"><i class="bi bi-plus-square-dotted" role="icon"></i></button>
+		</div>
+	</div>
+	<div id="editor-emoji-pane" class="border border-secondary mb-3">
+		<div id="emoji-list-recent" class="d-flex flex-row overflow-auto w-100"></div>
+		<div id="emoji-list-all" class="d-flex flex-wrap overflow-auto mw-100"></div>
+	</div>
+	
+	<div class="d-flex justify-content-evenly">
+		<button id="clear-canvas-button" type="button" class="btn btn-danger">
+			<i class="bi bi-x-square" role="icon"></i> Clear Canvas
+		</button>
+		<button id="send-message-button" type="button" class="btn btn-primary">
+			<i class="bi bi-send" role="icon"></i> Send Message
+		</button>
 	</div>
 
 </div>
@@ -375,10 +369,6 @@
 </content>
 
 
-<footer class="mt-auto">
-	<a href="https://github.com/raven-worx/lovebox-rpi-ng" target="_blank">&copy; 2022 lovebox-rpi-ng</a>
-</footer>
-
 <!-- modal dialogs -->
 
 <div class="modal fade" id="last-message-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="lastMessageDialogLabel" aria-hidden="true">
@@ -513,6 +503,7 @@
 <!--<script src="js/popper.min.js"></script>-->
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/fabric.min.js"></script>
+<script src="js/js.cookie.min.js"></script>
 <script src="js/loveboxpi.js"></script>
 
 </body>
