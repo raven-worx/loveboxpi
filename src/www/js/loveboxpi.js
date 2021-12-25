@@ -1,50 +1,3 @@
-
-function isNumericInput(evt) {
-	var charCode = (evt.which) ? evt.which : event.keyCode
-	if (charCode > 31 && (charCode < 48 || charCode > 57))
-		return false;
-	return true;
-}
-
-function setInputValue(item, value) {
-	var el = $(item)
-	if( el ) {
-		el.val(value)
-		el.change()
-		return true
-	} else {
-		return false
-	}
-}
-
-function increaseInputValue(item) {
-	var el = $(item)
-	if( el ) {
-		var value = parseInt(el.val(), 10);
-		value = isNaN(value) ? 10 : value;
-		value++;
-		el.val(value)
-		el.change()
-		return true
-	}
-	return false
-}
-
-function decreaseInputValue(item) {
-	var el = $(item)
-	if( el ) {
-		var value = parseInt(el.val(), 10);
-		value = isNaN(value) ? 10 : value;
-		value--;
-		if( value > 0 ) {
-			el.val(value)
-			el.change()
-			return true
-		}
-	}
-	return false
-}
-
 // h[0,360],s[0,1],v[0,1] -> r[0,1],g[0,1],b[0,1]
 function hsv2rgb(hsv) 
 {
@@ -145,8 +98,7 @@ function retrieveLastMessageInfo()
 	loader.show()
 	info.hide()
 	info.find('img').attr('src', '')
-	info.find('#last-message-status-active').empty().append('---')
-	info.find('#last-message-status-read').empty().append('---')
+	info.find('#last-message-status').empty().append('<span class="badge bg-secondary">inactive</span>')
 	
 	$.ajax({
 		method: "GET",
@@ -156,11 +108,13 @@ function retrieveLastMessageInfo()
 	})
 	.done(function(data) {
 		if( data.imageUrl.length != "" )
-		{
 			info.find('img').attr('src', data.imageUrl)
-			info.find('#last-message-status-active').empty().append( $( data.active ? '<span class="badge bg-success">active</span>' : '<span class="badge bg-secondary">inactive</span>') )
-			info.find('#last-message-status-read').empty().append( $( data.readTimestamp != "" ? '<span class="badge bg-success">read</span> ' : '<span class="badge bg-secondary">unread</span>') ).append( data.readTimestamp != "" ? "<br>" + new Date(data.readTimestamp).toLocaleString() : "" )
-		}
+		var contentBadge = data.active ? '<span class="badge bg-success">active</span>' : '<span class="badge bg-secondary">inactive</span>'
+		if( data.readTimestamp != "" )
+			contentBadge = '<span class="badge bg-success">read</span> <span>' + new Date(data.readTimestamp).toLocaleString() + '</span>'
+		else
+			contentBadge += ' <span class="badge bg-secondary">unread</span>'
+		info.find('#last-message-status').empty().append( $(contentBadge) )
 	})
 	.fail(function() {
 		showErrorMessage("Failed to get last message")
@@ -532,7 +486,7 @@ function sendCloudCmd(cmd, params, btn) {
 
 function addEmojiButton(emojiVal, parentElement, isRecentltyUsed)
 {
-	var btn = $('<input class="btn btn-outline-dark btn-lg emoji-button" type="button" value="&#x'+emojiVal+';" data-emoji="'+emojiVal+'">')
+	var btn = $('<input class="btn btn-outline-dark btn-lg emoji-button ratio ratio-1x1" type="button" value="&#x'+emojiVal+';" data-emoji="'+emojiVal+'">')
 	if( isRecentltyUsed )
 		parentElement.prepend( btn )
 	else
@@ -556,6 +510,9 @@ function addEmojiButton(emojiVal, parentElement, isRecentltyUsed)
 				recentlyEmojiList.unshift( $(this).data('emoji') )
 		});
 		Cookies.set('editor_recently_used_emojis', recentlyEmojiList.join(','))
+		
+		var popover = bootstrap.Popover.getInstance( $('#editor_emoji_button').get(0) )
+		popover.hide()
 	});
 }
 
@@ -760,17 +717,15 @@ $( document ).ready(function() {
 				break;
 			case "freedraw":
 				this.freeDrawingBrush = new fabric.PencilBrush(this);
-				this.freeDrawingBrush.width = parseInt($('input#editor_brush_size_slider').val())
+				this.freeDrawingBrush.width = this.brushSize
 				this.isDrawingMode = true
 				break;
 			case "eraser":
 				this.freeDrawingBrush = new fabric.EraserBrush(this);
-				this.freeDrawingBrush.width = parseInt($('input#editor_brush_size_slider').val())
+				this.freeDrawingBrush.width = this.brushSize
 				this.isDrawingMode = true
 				break;
 		}
-		
-		$('input#editor_brush_size_slider').prop('disabled', !this.isDrawingMode)
 		
 		var selectionMode = mode == "selection" || !mode
 		this.forEachObject(function(obj) {
@@ -801,6 +756,22 @@ $( document ).ready(function() {
 		this.requestRenderAll();
 		this.setEditorMode("selection")
 	}
+	canvas.setBrushSize = function(size) {
+		this.brushSize = parseInt(size)
+		if( this.isDrawingMode )
+		{
+			switch(canvas.editorMode) {
+				case "freedraw":
+					this.freeDrawingBrush = new fabric.PencilBrush(canvas);
+					this.freeDrawingBrush.width = this.brushSize
+				break;
+				case "eraser":
+					this.freeDrawingBrush = new fabric.EraserBrush(canvas);
+					this.freeDrawingBrush.width = this.brushSize
+				break;
+			}
+		}
+	}
 	
 	canvas.on({
 		'mouse:down': options => {
@@ -821,6 +792,7 @@ $( document ).ready(function() {
 		}
 	});
 	
+	canvas.setBrushSize( $('input#editor_brush_size_slider').val() )
 	canvas.setEditorMode("selection")
 	canvas.setActiveElementType('')
 	
@@ -851,23 +823,14 @@ $( document ).ready(function() {
 		canvas.setActiveObject(text);
 		canvas.requestRenderAll();
 		canvas.setEditorMode("selection")
+		// hide text popover
+		var popover = bootstrap.Popover.getInstance( $('#editor_text_button').get(0) )
+		popover.hide()
 	});
 	$('input#editor_brush_size_slider').on('input change', function(event) {
-		$('span#editor_brush_size_value').text( $(this).val() )
-		
-		if( canvas.isDrawingMode )
-		{
-			switch(canvas.editorMode) {
-				case "freedraw":
-					canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-					canvas.freeDrawingBrush.width = parseInt($(this).val())
-				break;
-				case "eraser":
-					canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
-					canvas.freeDrawingBrush.width = parseInt($(this).val())
-				break;
-			}
-		}
+		var val = $(this).val()
+		$('span#editor_brush_size_value').text( val )
+		canvas.setBrushSize( val );
 	});
 	$('select#editor_text_fontlist').change(function() {
 		var obj = canvas.getActiveObject()
@@ -887,6 +850,52 @@ $( document ).ready(function() {
 			addEmojiButton(emoji, $('#emoji-list-recent'), true)
 		})
 	}
+	
+	var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+	var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+		var contentEl = $($(popoverTriggerEl).data('popover-content')).get(0)
+		var popover = new bootstrap.Popover(popoverTriggerEl, {
+			container: 'body',
+			placement: 'bottom',
+			html: true,
+			content: contentEl
+		})
+		popoverTriggerEl.addEventListener('show.bs.popover', function () {
+			$('[data-bs-toggle="popover"][data-popover-visible="true"]').each(function() {
+				var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+					var popover = bootstrap.Popover.getInstance(popoverTriggerEl)
+					popover.hide()
+				})
+			})
+			
+			$(popoverTriggerEl).attr('data-popover-visible', 'true')
+		})
+		popoverTriggerEl.addEventListener('hide.bs.popover', function () {
+			$(popoverTriggerEl).attr('data-popover-visible', 'false')
+		})
+		popover.show()
+		popover.hide()
+		return popover
+	})
+	
+	$(document).click(function(e) {
+		// click on popup button?
+		var triggerEl = $(e.target).closest('[data-bs-toggle="popover"]')
+		if( triggerEl.length > 0 ) // click on another popup button? if yes close the current
+		{
+			if( triggerEl.attr('data-popover-visible') == 'true' )
+				return
+		}
+		// click inside popup content?
+		if( $(e.target).parents('.popover').length == 0 ) // close all
+		{
+			var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+			var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+				var popover = bootstrap.Popover.getInstance(popoverTriggerEl)
+				popover.hide()
+			})
+		}
+	});
 	
 	// init
 	retrieveInfo()

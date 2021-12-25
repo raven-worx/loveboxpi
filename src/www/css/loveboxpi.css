@@ -18,15 +18,17 @@ div.page {
 }
 
 div#editor-emoji-pane div#emoji-list-recent {
-	background: lightgrey;
+	padding: 2px;
 }
 
 div#editor-emoji-pane div#emoji-list-all {
 	height: 150px;
+	padding: 2px;
 }
 
 div#editor-emoji-pane .emoji-button {
-	font-size: 1.8em;
-	font-family: "EmojiSymbols" !important;
+	font-size: 160%;
+	font-family:  "EmojiSymbols" !important;
 	margin: 2px;
+	width: 50px !important;
 }

@@ -71,37 +71,48 @@
 					<input type="radio" class="btn-check" name="editor_mode" id="editor_mode_eraser" value="eraser" autocomplete="off">
 					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser" role="icon"></i></label>
 				</div>
-				<div class="btn-group" role="group" aria-label="Third group">
-					<button id="editor_delete_item" type="button" class="btn btn-danger"><i class="bi bi-trash" role="icon"></i> Delete Item</button>
+				<div class="btn-group me-2" role="group" aria-label="Edit group">
+					<a id="editor_text_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-text-pane" title="Text"><i class="bi bi-fonts" role="icon"></i></a>
+					<a id="editor_brush_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-brush-pane" title="Brush size"><i class="bi bi-brush" role="icon"></i></a>
+					<a id="editor_emoji_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-emoji-pane" title="Emoticons"><i class="bi bi-emoji-smile" role="icon"></i></a>
+				</div>
+				<div class="btn-group" role="group" aria-label="Delete group">
+					<button id="editor_delete_item" type="button" class="btn btn-danger"><i class="bi bi-trash" role="icon"></i></button>
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="row mt-2 mb-2">
+	<div class="row mt-3 mb-3">
 		<div class="col-12 d-flex justify-content-center">
 			<canvas id="editor_canvas" width="264" height="176" style="border: 1px solid black;"></canvas>
 		</div>
 	</div>
 	
-	<div class="row mb-1">
+	<div id="editor-brush-pane" class="row mb-1">
 		<div class="input-group col-12 d-flex justify-content-center">
-			<span class="input-group-text">Brush size</span>
 			<div class="input-group-text">
 				<input type="range" class="form-range w-100" id="editor_brush_size_slider" min="1" max="80" value="10" step="1">
 			</div>
 			<span class="input-group-text" id="editor_brush_size_value">10</span>
 		</div>
 	</div>
-	<div class="row mb-1">
-		<div class="input-group col-12 d-flex justify-content-center">
-			<span class="input-group-text">Font</span>
-			<select id="editor_text_fontlist" class="form-select" data-role="font-select"></select>
-			<button id="editor_insert_text" class="btn btn-outline-secondary" type="button"><i class="bi bi-plus-square-dotted" role="icon"></i></button>
+	<div id="editor-text-pane" class="w-100">
+		<div class="d-flex justify-content-center mb-1">
+			<div class="input-group">
+				<span class="input-group-text">Font</span>
+				<select id="editor_text_fontlist" class="form-select" data-role="font-select"></select>
+			</div>
+		</div>
+		<div class="d-flex justify-content-center">
+			<button id="editor_insert_text" class="btn btn-outline-secondary w-75" type="button"><i class="bi bi-plus-square-dotted" role="icon"></i> Add Text</button>
 		</div>
 	</div>
-	<div id="editor-emoji-pane" class="border border-secondary mb-3">
-		<div id="emoji-list-recent" class="d-flex flex-row overflow-auto w-100"></div>
+	<div id="editor-emoji-pane" class="border border-secondary rounded p-1">
+		<div class="bg-gradient border-bottom border-secondary border-3" stlye="background-color: lightgrey">
+			<span class="fw-bold d-inline-block">Recently used</span>
+			<div id="emoji-list-recent" class="d-flex flex-row overflow-auto w-100"></div>
+		</div>
 		<div id="emoji-list-all" class="d-flex flex-wrap overflow-auto mw-100"></div>
 	</div>
 	
@@ -388,11 +399,7 @@
 						<div class="container card-text">
 							<div class="row justify-content-md-center">
 								<div class="col text-end">Message Status</div>
-								<div id="last-message-status-active" class="col text-start"></div>
-							</div>
-							<div class="row justify-content-md-center">
-								<div class="col text-end">Read Status</div>
-								<div id="last-message-status-read" class="col text-start"></div>
+								<div id="last-message-status" class="col text-start"></div>
 							</div>
 						</div>
 					</div>
@@ -498,9 +505,8 @@
 </div>
 
 
-<!-- Load Bootstrap JavaScript components -->
 <script src="js/jquery.min.js"></script>
-<!--<script src="js/popper.min.js"></script>-->
+<script src="js/popper.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/fabric.min.js"></script>
 <script src="js/js.cookie.min.js"></script>
