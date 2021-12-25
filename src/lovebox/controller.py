@@ -150,7 +150,7 @@ class Controller:
 			self.display.writeImage(imageData)
 		else:
 			self.display.writeText("No message\nto show", fontsize=(15,25), alignment='center')
-		time.sleep(2)
+		time.sleep(1)
 		self._restoreState()
 		return True
 	
