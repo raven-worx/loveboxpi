@@ -104,7 +104,7 @@ function retrieveLastMessageInfo()
 		method: "GET",
 		url: "api/v1/message",
 		cache: false,
-		timeout: 10000
+		timeout: 30000
 	})
 	.done(function(data) {
 		if( data.imageUrl.length != "" )
@@ -112,8 +112,6 @@ function retrieveLastMessageInfo()
 		var contentBadge = data.active ? '<span class="badge bg-success">active</span>' : '<span class="badge bg-secondary">inactive</span>'
 		if( data.readTimestamp != "" )
 			contentBadge = '<span class="badge bg-success">read</span> <span>' + new Date(data.readTimestamp).toLocaleString() + '</span>'
-		else
-			contentBadge += ' <span class="badge bg-secondary">unread</span>'
 		info.find('#last-message-status').empty().append( $(contentBadge) )
 	})
 	.fail(function() {
@@ -469,7 +467,7 @@ function sendCloudCmd(cmd, params, btn) {
 		}),
 		processData: false,
 		contentType: "application/json",
-		timeout: 10000
+		timeout: 15000
 	})
 	.done(function() {
 		showSuccessMessage("Cloud '" + cmd + "' was successfull")
