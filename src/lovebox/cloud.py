@@ -39,11 +39,17 @@ class Cloud:
 		if self._available():
 			config_port = config.readSetting('www','port')
 			if self.service_added:
-				service_port = self.service_address.split(':')[1]
-				if int(config_port) != int(service_port):
-					if self.updateService(config_port):
-						time.sleep(10)
-						self.update()
+				if len(self.service_address) > 0:
+					if self.service_address.find(':') >= 0:
+						service_port = self.service_address.split(':')[1]
+					else:
+						service_port = 80
+					if int(config_port) != int(service_port):
+						if self.updateService(config_port):
+							time.sleep(10)
+							self.update()
+				else:
+					print("Cloud service added but address is empty. How could this happen?!")
 			elif self.device_registered:
 				if self.addService(config_port):
 					time.sleep(10)
