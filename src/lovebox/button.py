@@ -1,39 +1,6 @@
-import re
-import threading
-import RPi.GPIO as GPIO
+from gpiozero import Button as GPIOButton
 from . import config
 from . import controller
-
-class ButtonThread(threading.Thread):
-	def __init__(self, *args, **kwargs):
-		super(ButtonThread, self).__init__(*args, **kwargs)
-		self._stopEv = threading.Event()
-	
-	def stop(self):
-		self._stopEv.set()
-	
-	def stopped(self):
-		return self._stopEv.isSet()
-	
-	def run(self):
-		idx = self._kwargs['idx']
-		pin = self._kwargs['pin']
-		callback = self._kwargs['callback']
-		state = False # prevent calling the callback multiple times while holding the button
-	
-		while not self.stopped():
-			if self._stopEv.wait(0.2): # 200ms bounce time
-				break
-			# seems the waveshare driver messes with the GPIOs when updating the display, so we have to setup the pin again
-			GPIO.setmode(GPIO.BCM)
-			GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-			if GPIO.input(pin) == GPIO.LOW: # pressed
-				if not state:
-					state = True
-					callback()
-			else:
-				state = False
-		GPIO.cleanup(pin)
 
 class Button:
 	def __init__(self,idx,controller):
@@ -54,26 +21,21 @@ class Button:
 	def _create(self):
 		if self.btn is not None:
 			return
-		if self.enabled and self.pin > 0:
-			self.btn = ButtonThread(name="ButtonHandler_"+str(self.idx), kwargs={'idx': self.idx, 'pin': self.pin, 'callback': self.button_callback})
-			self.btn.gpio = self.pin
-			self.btn.start()
+		if self.enabled and len(self.pin) > 0:
+			self.btn = GPIOButton(self.pin)
+			self.btn.when_pressed = self.button_callback
 	
 	def _close(self):
 		if self.btn is None:
 			return
-		self.btn.stop()
-		self.btn.join()
+		self.btn.close()
 		self.btn = None
-	
-	def gpioStrToValue(self,val):
-		return int(re.search('^GPIO(\d+)$', val).group(1))
 	
 	def settingsUpdated(self):
 		key = "button"+str(self.idx)
 		
 		enabled = config.readSetting(key,"enabled") == "1"
-		pin = self.gpioStrToValue( config.readSetting(key,"pin") )
+		pin = config.readSetting(key,"pin")
 		action = config.readSetting(key,"action")
 		
 		if self.enabled == enabled and self.pin == pin and self.action == action:
