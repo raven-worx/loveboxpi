@@ -12,7 +12,6 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-
 <header>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 	<div class="container-fluid">
@@ -24,29 +23,29 @@
 			<ul class="nav navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
 					<a class="nav-link active" href="#home" role="button" id="nav-home" data-bs-target="#message-page" aria-controls="message-page" aria-selected="true">
-						<i class="bi bi-chat-right-text-fill" role="icon"></i> Message
+						<i class="bi bi-chat-right-text-fill" role="icon"></i> <span data-i18n="header.nav.message">Message</span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#cloud" role="button" id="nav-cloud" data-bs-target="#cloud-page" aria-controls="#cloud-page" aria-selected="false">
-						<i class="bi bi-cloud-fill" role="icon"></i> Cloud
+						<i class="bi bi-cloud-fill" role="icon"></i> <span data-i18n="header.nav.cloud">Cloud</span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#settings" role="button" id="nav-settings" data-bs-target="#settings-page" aria-controls="#settings-page" aria-selected="false">
-						<i class="bi bi-wrench" role="icon"></i> Settings
+						<i class="bi bi-wrench" role="icon"></i> <span data-i18n="header.nav.settings">Settings</span>
 					</a>
 				</li>
 			</ul>
 			<span id="nav-version-text" class="navbar-text me-2"></span>
 			<button id="nav-test-button" type="button" class="btn btn-outline-info me-2">
-				<i class="bi bi-phone-vibrate" role="icon"></i> Test
+				<i class="bi bi-phone-vibrate" role="icon"></i> <span data-i18n="header.cmd.test">Test</span>
 			</button>
 			<button id="nav-restart-button" type="button" class="btn btn-outline-warning me-2">
-				<i class="bi bi-arrow-repeat" role="icon"></i> Restart
+				<i class="bi bi-arrow-repeat" role="icon"></i> <span data-i18n="header.cmd.restart">Restart</span>
 			</button>
 			<button id="nav-last-message-button" type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#last-message-dialog">
-				<i class="bi bi-chat-right-dots" role="icon"></i> Message
+				<i class="bi bi-chat-right-dots" role="icon"></i> <span data-i18n="header.cmd.message">Message</span>
 			</button>
 		</div>
 	</div>
@@ -72,9 +71,9 @@
 					<label class="btn btn-outline-primary" for="editor_mode_eraser"><i class="bi bi-eraser" role="icon"></i></label>
 				</div>
 				<div class="btn-group me-2" role="group" aria-label="Edit group">
-					<a id="editor_text_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-text-pane" title="Text"><i class="bi bi-fonts" role="icon"></i></a>
-					<a id="editor_brush_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-brush-pane" title="Brush size"><i class="bi bi-brush" role="icon"></i></a>
-					<a id="editor_emoji_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-emoji-pane" title="Emoticons"><i class="bi bi-emoji-smile" role="icon"></i></a>
+					<a id="editor_text_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-text-pane"><i class="bi bi-fonts" role="icon"></i></a>
+					<a id="editor_brush_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-brush-pane"><i class="bi bi-brush" role="icon"></i></a>
+					<a id="editor_emoji_button" tabindex="0" role="button" class="btn btn-outline-secondary" data-bs-toggle="popover" data-popover-content="#editor-emoji-pane"><i class="bi bi-emoji-smile" role="icon"></i></a>
 				</div>
 				<div class="btn-group" role="group" aria-label="Delete group">
 					<button id="editor_delete_item" type="button" class="btn btn-danger"><i class="bi bi-trash" role="icon"></i></button>
@@ -100,17 +99,17 @@
 	<div id="editor-text-pane" class="w-100">
 		<div class="d-flex justify-content-center mb-1">
 			<div class="input-group">
-				<span class="input-group-text">Font</span>
+				<span class="input-group-text" data-i18n="message.canvas.text.font">Font</span>
 				<select id="editor_text_fontlist" class="form-select" data-role="font-select"></select>
 			</div>
 		</div>
 		<div class="d-flex justify-content-center">
-			<button id="editor_insert_text" class="btn btn-outline-secondary w-75" type="button"><i class="bi bi-plus-square-dotted" role="icon"></i> Add Text</button>
+			<button id="editor_insert_text" class="btn btn-outline-secondary w-75" type="button"><i class="bi bi-plus-square-dotted" role="icon"></i> <span data-i18n="message.canvas.text.addtext">Add Text</span></button>
 		</div>
 	</div>
 	<div id="editor-emoji-pane" class="border border-secondary rounded p-1">
 		<div class="bg-gradient border-bottom border-secondary border-3" stlye="background-color: lightgrey">
-			<span class="fw-bold d-inline-block">Recently used</span>
+			<span class="fw-bold d-inline-block" data-i18n="message.canvas.emojicons.recentlyused">Recently used</span>
 			<div id="emoji-list-recent" class="d-flex flex-row overflow-auto w-100"></div>
 		</div>
 		<div id="emoji-list-all" class="d-flex flex-wrap overflow-auto mw-100"></div>
@@ -118,10 +117,10 @@
 	
 	<div class="d-flex justify-content-evenly">
 		<button id="clear-canvas-button" type="button" class="btn btn-danger">
-			<i class="bi bi-x-square" role="icon"></i> Clear Canvas
+			<i class="bi bi-x-square" role="icon"></i> <span data-i18n="message.btn.clear">Clear Canvas</span>
 		</button>
 		<button id="send-message-button" type="button" class="btn btn-primary">
-			<i class="bi bi-send" role="icon"></i> Send Message
+			<i class="bi bi-send" role="icon"></i> <span data-i18n="message.btn.send">Send Message</span>
 		</button>
 	</div>
 
@@ -132,8 +131,17 @@
 
 	<form id="settings-form" class="needs-validation" novalidate>
 		<fieldset class="mb-3">
-			<legend>LED</legend>
-			<div class="form-text mb-2">
+			<legend data-i18n="settings.userinterface.title">User Interface</legend>
+			<div class="form-group  mb-2">
+				<label for="display_type" data-i18n="settings.userinterface.language.name">Language</label>
+				<select id="interface_lang" name="interface_lang" class="form-select" required></select>
+				<div class="invalid-feedback" data-i18n="settings.userinterface.language.invalid">No language selected</div>
+				<small id="display_type_desc" class="form-text text-muted" data-i18n="settings.userinterface.language.desc">Select the user interface language</small>
+			</div>
+		</fieldset>
+		<fieldset class="mb-3">
+			<legend data-i18n="settings.led.title">LED</legend>
+			<div class="form-text mb-2" data-i18n="settings.led.desc">
 				The LED is used to notify about a new message received.
 			</div>
 			<div class="form-group mb-2">
@@ -141,24 +149,22 @@
 					<div class="input-group-text">
 						<input id="led_enabled" class="form-check-input mt-0" type="checkbox" aria-label="LED enabled">
 					</div>
-					<div class="input-group-text">
-						Enabled
-					</div>
+					<div class="input-group-text" data-i18n="settings.led.enabled.name">Enabled</div>
 				</div>
-				<small id="led_enabled_desc" class="form-text text-muted">Specifies if the LED functionality should be used or not.</small>
+				<small id="led_enabled_desc" class="form-text text-muted" data-i18n="settings.led.enabled.desc">Specifies if the LED functionality should be used or not.</small>
 			</div>
 			<div class="form-group mb-2">
-				<label for="led_color">Color</label>
+				<label for="led_color" data-i18n="settings.led.color.name">Color</label>
 				<div class="input-group w-100">
 					<div class="input-group-text w-75">
 						<input type="range" class="form-range w-100" name="led_color_slider" id="led_color_slider" min="0" max="360" value="0" step="1">
 					</div>
 					<span class="input-group-text user-select-all" id="led_color_value" style="background-color:red; color: white; text-shadow: black 0px 0px 3px;">#ff0000</span>
 				</div>
-				<small id="led_color_desc" class="form-text text-muted">Color of the RGB LED</small>
+				<small id="led_color_desc" class="form-text text-muted" data-i18n="settings.led.color.desc">Color of the RGB LED</small>
 			</div>
 			<div class="form-group">
-				<label>LED GPIOs</label>
+				<label data-i18n="settings.led.gpios.name">LED GPIOs</label>
 				<div class="input-group has-validation">
 					<span class="input-group-text">R</span>
 					<select id="led_gpio_r" name="led_gpio_r" class="form-select" data-role="gpio-select" data-role-enabled-handler="#led_enabled"></select>
@@ -166,114 +172,113 @@
 					<select id="led_gpio_g" name="led_gpio_g" class="form-select" data-role="gpio-select" data-role-enabled-handler="#led_enabled"></select>
 					<span class="input-group-text">B</span>
 					<select id="led_gpio_b" name="led_gpio_b" class="form-select" data-role="gpio-select" data-role-enabled-handler="#led_enabled"></select>
-					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
+					<div class="invalid-feedback" data-i18n="settings.led.gpios.invalid">Duplicate or no GPIO value selected</div>
 				</div>
-				<small id="led_gpios_desc" class="form-text text-muted">GPIO pins for the connected RGB LED in Broadcom (BCM) pin numbering</small>
+				<small id="led_gpios_desc" class="form-text text-muted" data-i18n="settings.led.gpios.desc">GPIO pins for the connected RGB LED in Broadcom (BCM) pin numbering</small>
 			</div>
 		</fieldset>
 		<fieldset class="mb-3">
-			<legend>Buttons</legend>
-			<div class="form-text mb-2">
-				Specify the button's enabled state, GPIO pin - in Broadcom (BCM) pin numbering - and the assigned action
-				which should be executed when the button is pressed.
+			<legend data-i18n="settings.buttons.title">Buttons</legend>
+			<div class="form-text mb-2" data-i18n="settings.buttons.desc">
+				Specify the button's enabled state, GPIO pin - in Broadcom (BCM) pin numbering - and the assigned action which should be executed when the button is pressed.
 			</div>
 			<div class="form-group">
-				<label>Button 1</label>
 				<div class="input-group has-validation">
+					<span class="input-group-text">1</span>
 					<div class="input-group-text">
 						<input id="button1_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 1 enabled">
 					</div>
 					<select id="button1_gpio" name="button1_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button1_enabled"></select>
 					<select id="button1_action" name="button1_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button1_enabled"></select>
-					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
+					<div class="invalid-feedback" data-i18n="settings.buttons.invalid">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label>Button 2</label>
 				<div class="input-group has-validation">
+					<span class="input-group-text">2</span>
 					<div class="input-group-text">
 						<input id="button2_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 2 enabled">
 					</div>
 					<select id="button2_gpio" name="button2_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button2_enabled"></select>
 					<select id="button2_action" name="button2_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button2_enabled"></select>
-					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
+					<div class="invalid-feedback" data-i18n="settings.buttons.invalid">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label>Button 3</label>
 				<div class="input-group has-validation">
+					<span class="input-group-text">3</span>
 					<div class="input-group-text">
 						<input id="button3_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 3 enabled">
 					</div>
 					<select id="button3_gpio" name="button3_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button3_enabled"></select>
 					<select id="button3_action" name="button3_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button3_enabled"></select>
-					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
+					<div class="invalid-feedback" data-i18n="settings.buttons.invalid">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label>Button 4</label>
 				<div class="input-group has-validation">
+					<span class="input-group-text">4</span>
 					<div class="input-group-text">
 						<input id="button4_enabled" class="form-check-input mt-0" type="checkbox" aria-label="Button 4 enabled">
 					</div>
 					<select id="button4_gpio" name="button4_gpio" class="form-select" data-role="gpio-select" data-role-enabled-handler="#button4_enabled"></select>
 					<select id="button4_action" name="button4_action" class="form-select" data-role="action-select" data-role-enabled-handler="#button4_enabled"></select>
-					<div class="invalid-feedback">Duplicate or no GPIO value selected</div>
+					<div class="invalid-feedback" data-i18n="settings.buttons.invalid">Duplicate or no GPIO value selected</div>
 				</div>
 			</div>
 		</fieldset>
 		<fieldset class="mb-3">
-			<legend>Display</legend>
-			<div class="form-text bg-light border border-warning border-2 mb-2 p-1">
+			<legend data-i18n="settings.display.title">Display</legend>
+			<div class="form-text bg-light border border-warning border-2 mb-2 p-1" data-i18n="settings.display.note">
 				Display setting changes require a restart to take effect
 			</div>
 			<div class="form-group  mb-2">
-				<label for="display_type">Type</label>
+				<label for="display_type" data-i18n="settings.display.type.name">Type</label>
 				<select id="display_type" name="display_type" class="form-select" required></select>
-				<div class="invalid-feedback">No display type selected</div>
-				<small id="display_type_desc" class="form-text text-muted">Select the attached Waveshare ePaper display type</small>
+				<div class="invalid-feedback" data-i18n="settings.display.type.invalid">No display type selected</div>
+				<small id="display_type_desc" class="form-text text-muted" data-i18n="settings.display.type.desc">Select the connected Waveshare ePaper display type</small>
 			</div>
 			<div class="form-group">
-				<label for="display_rotation">Rotation</label>
+				<label for="display_rotation" data-i18n="settings.display.rotation.name">Rotation</label>
 				<select id="display_rotation" name="display_rotation" class="form-select">
 					<option value="0" selected>0</option>
 					<option value="90">90</option>
 					<option value="180">180</option>
 					<option value="270">270</option>
 				</select>
-				<small id="display_rotation_desc" class="form-text text-muted">Rotation of the content displayed</small>
+				<small id="display_rotation_desc" class="form-text text-muted" data-i18n="settings.display.rotation.desc">Rotation of the content displayed</small>
 			</div>
 		</fieldset>
 		<fieldset class="mb-3">
-			<legend>Server</legend>
-			<div class="form-text bg-light border border-warning border-2 mb-2 p-1">
+			<legend data-i18n="settings.server.title">Server</legend>
+			<div class="form-text bg-light border border-warning border-2 mb-2 p-1" data-i18n="settings.server.note">
 				Server setting changes require a restart to take effect
 			</div>
 			<div class="form-group mb-2">
-				<label for="server_host">Host</label>
+				<label for="server_host" data-i18n="settings.server.host.label">Host</label>
 				<input type="text" minlength="7" maxlength="15" class="form-control" id="server_host" value="0.0.0.0" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
-				<div class="invalid-feedback">Specify a valid IP address ("[0-254].[0-254].[0-254].[0-254]").</div>
-				<small id="server_host_desc" class="form-text text-muted">The IP address of the network interface the webserver should listen on. The last section should end with '0'. Use '0.0.0.0' for all network interfaces (Wifi, LAN, etc).</small>
+				<div class="invalid-feedback" data-i18n="settings.server.host.invalid">Specify a valid IP address ("[0-254].[0-254].[0-254].[0-254]").</div>
+				<small id="server_host_desc" class="form-text text-muted" data-i18n="settings.server.host.desc">The IP address of the network interface the webserver should listen on. The last section should end with '0'. Use '0.0.0.0' for all network interfaces (Wifi, LAN, etc).</small>
 			</div>
 			<div class="form-group">
-				<label for="server_port">Port</label>
+				<label for="server_port" data-i18n="settings.server.port.label">Port</label>
 				<input type="number" min="1" max="65535" class="form-control" id="server_port" value="80">
-				<div class="invalid-feedback">Specify a valid port number in the range from 1 to 65535.</div>
-				<small id="server_port_desc" class="form-text text-muted">The port the webserver should listen on. Port '80' is the default port for HTTP.</small>
+				<div class="invalid-feedback" data-i18n="settings.server.port.invalid">Specify a valid port number in the range from 1 to 65535.</div>
+				<small id="server_port_desc" class="form-text text-muted" data-i18n="settings.server.port.desc">The port the webserver should listen on. Port '80' is the default port for HTTP.</small>
 			</div>
 		</fieldset>
 		
 	</form>
 	<div class="row mt-3">
 		<div class="col">
-		  <button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col">
-			<i class="bi bi-x-square" role="icon"></i> Load
-		  </button>
+			<button id="load-settings-button" type="button" class="btn btn-secondary btn-lg col">
+				<i class="bi bi-x-square" role="icon"></i> <span data-i18n="settings.btn.load">Load</span>
+			</button>
 		</div>
 		<div class="col-auto">
-		  <button id="save-settings-button" type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
-			<i class="bi bi-check-lg" role="icon"></i> Save
-		  </button>
+			<button id="save-settings-button" type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#save-settings-dialog">
+				<i class="bi bi-check-lg" role="icon"></i> <span data-i18n="settings.btn.save">Save</span>
+			</button>
 		</div>
 	</div>
 </div>
@@ -284,42 +289,44 @@
 	<div class="card-header">
 		<ul class="nav nav-pills card-header-pills">
 			<li class="nav-item">
-				<a class="nav-link" id="nav-cloud-login" href="#cloud-pane-login" data-bs-target="#cloud-pane-login" aria-controls="#cloud-pane-login" aria-selected="false">Login</a>
+				<a class="nav-link" id="nav-cloud-login" href="#cloud-pane-login" data-bs-target="#cloud-pane-login" aria-controls="#cloud-pane-login" aria-selected="false" data-i18n="cloud.login.title">Login</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" id="nav-cloud-register" href="#cloud-pane-register" data-bs-target="#cloud-pane-register" aria-controls="#cloud-pane-register" aria-selected="false">Register</a>
+				<a class="nav-link" id="nav-cloud-register" href="#cloud-pane-register" data-bs-target="#cloud-pane-register" aria-controls="#cloud-pane-register" aria-selected="false" data-i18n="cloud.register.title">Register</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link active" id="nav-cloud-info" href="#cloud-pane-info" data-bs-target="#cloud-pane-info" aria-controls="#cloud-pane-info" aria-selected="true">Info</a>
+				<a class="nav-link active" id="nav-cloud-info" href="#cloud-pane-info" data-bs-target="#cloud-pane-info" aria-controls="#cloud-pane-info" aria-selected="true" data-i18n="cloud.info.title">Info</a>
 			</li>
 		</ul>
 	</div>
 	<div class="card-body tab-content">
 		<div class="tab-pane fade" id="cloud-pane-login" role="tabpanel" aria-labelledby="nav-cloud-login">
 			<form id="cloud-login-form">
-				<div id="cloud-login-desc" class="form-text mb-3">
-					<div class="fs-6">Enter your <a href="https://remote.it/" target="_blank">remote.it</a> account credentials.</div>
-					<div class="text-wrap fs-6"><strong>NOTE:</strong> SSO account credentials (Google) are not supported.</div>
+				<div id="cloud-login-desc" class="form-text mb-3 text-center">
+					<span class="fs-6" data-i18n="cloud.login.form.label">Enter your account credentials</span> <a href="https://remote.it/" target="_blank" class="fs-6 badge bg-primary link-light text-decoration-none">remote.it <i class="bi bi-box-arrow-up-right" role="icon"></i></a>
+					<div class="text-wrap fs-6 fw-bold" data-i18n="cloud.login.form.note">NOTE: SSO account credentials (Google) are not supported.</div>
 				</div>
 				<div class="form-floating mb-3">
 					<input type="email" class="form-control" id="cloud-login-email">
-					<label for="cloud-login-email" class="form-label">Email address</label>
+					<label for="cloud-login-email" class="form-label" data-i18n="cloud.login.form.email">Email address</label>
 				</div>
 				<div class="form-floating mb-3">
 					<input type="password" class="form-control" id="cloud-login-password">
-					<label for="cloud-login-password" class="form-label">Password</label>
+					<label for="cloud-login-password" class="form-label" data-i18n="cloud.login.form.password">Password</label>
 				</div>
-				<button id="cloud-login-button" type="button" class="btn btn-primary text-center">
-					<i class="bi bi-person-square" role="icon"></i> Login
-				</button>
+				<div class="text-center">
+					<button id="cloud-login-button" type="button" class="btn btn-primary text-center">
+						<i class="bi bi-person-square" role="icon"></i> <span data-i18n="cloud.login.btn.login">Login</span>
+					</button>
+				</div>
 			</form>
 			<form id="cloud-logout-form" class="text-center">
 				<div id="cloud-logout-desc" class="form-text mb-3 fs-6">
-					You are currently logged in as<br>
+					<span class="d-block" data-i18n="cloud.login.loggedin">You are currently logged in as</span> 
 					<strong id="cloud-logout-desc-username"></strong>
 				</div>
-				<button id="cloud-logout-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cloud-logout-dialog">
-					<i class="bi bi-person-x-fill" role="icon"></i> Logout
+				<button id="cloud-logout-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cloud-logout-dialog">
+					<i class="bi bi-person-x-fill" role="icon"></i> <span data-i18n="cloud.login.btn.logout">Logout</span>
 				</button>
 			</form>
 		</div>
@@ -327,46 +334,46 @@
 			<form id="cloud-registerdevice-form">
 				<div class="form-floating mb-3">
 					<input type="text" class="form-control" id="cloud-registerdevice-name" value="LoveboxPi">
-					<label for="cloud-registerdevice-name" class="form-label">Device name</label>
-					<div class="form-text">Specify a name for this device. This name appears in the list of devices in your cloud service.</div>
+					<label for="cloud-registerdevice-name" class="form-label" data-i18n="cloud.register.devicename">Device name</label>
+					<div class="form-text" data-i18n="cloud.register.desc">Specify a name for this device. This name appears in the list of devices in your cloud service.</div>
 				</div>
 				<div class="text-center">
 					<button id="cloud-registerdevice-button" type="button" class="btn btn-primary">
-						<i class="bi bi-cloud-plus" role="icon"></i> Register device
+						<i class="bi bi-cloud-plus" role="icon"></i> <span data-i18n="cloud.register.btn.register">Register device</span>
 					</button>
 				</div>
 			</form>
 			<form id="cloud-unregisterdevice-form" class="text-center">
 				<div id="cloud-logout-desc" class="form-text mb-3 fs-6">
-					The device is currently registered as<br>
+					<span class="d-block" data-i18n="cloud.register.registered">The device is currently registered as</span>
 					<strong id="cloud-unregisterdevice-desc-name"></strong>
 				</div>
 				<button id="cloud-unregisterdevice-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cloud-unregisterdevice-dialog">
-					<i class="bi bi-cloud-minus" role="icon"></i> Unregister device
+					<i class="bi bi-cloud-minus" role="icon"></i> <span data-i18n="cloud.register.btn.unregister">Unregister device</span>
 				</button>
 			</form>
 		</div>
 		<div class="tab-pane fade show active" id="cloud-pane-info" role="tabpanel" aria-labelledby="nav-cloud-info">
 			<div class="container">
 				<div class="row">
-					<div class="col-7 text-start">Installed</div>
+					<div class="col-7 text-start" data-i18n="cloud.info.installed">Installed</div>
 					<div class="col-5 text-end" id="cloud-info-value-installed"></div>
 				</div>
 				<div class="text-end" id="cloud-info-install-button-row">
 					<button id="cloud-install-button" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#cloud-install-dialog">
-						<i class="bi bi-cloud-download" role="icon"></i> Install
+						<i class="bi bi-cloud-download" role="icon"></i> <span data-i18n="cloud.info.btn.install">Install</span>
 					</button>
 				</div>
 				<div class="row">
-					<div class="col-7 text-start">Logged in</div>
+					<div class="col-7 text-start" data-i18n="cloud.info.loggedin">Logged in</div>
 					<div class="col-5 text-end" id="cloud-info-value-loggedin"></div>
 				</div>
 				<div class="row">
-					<div class="col-7 text-start">Device registered</div>
+					<div class="col-7 text-start" data-i18n="cloud.info.registered">Device registered</div>
 					<div class="col-5 text-end" id="cloud-info-value-deviceregistered"></div>
 				</div>
 				<div class="row">
-					<div class="col-7 text-start">Service added</div>
+					<div class="col-7 text-start" data-i18n="cloud.info.serviceadded">Service added</div>
 					<div class="col-5 text-end" id="cloud-info-value-serviceadded"></div>
 				</div>
 			</div>
@@ -383,125 +390,124 @@
 <!-- modal dialogs -->
 
 <div class="modal fade" id="last-message-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="lastMessageDialogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lastMessageDialogLabel">Last Message</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-			<div class="d-flex justify-content-center">
-				<div id="last-message-loading-indicator" class="spinner-border m-4" style="width: 8rem; height: 8rem;" role="status"></div>
-			
-				<div id="last-message-info-container" class="card w-100" style1="width: 18rem;">
-					<img class="card-img-top">
-					<div class="card-footer">
-						<div class="container card-text">
-							<div class="row justify-content-md-center">
-								<div class="col text-end">Message Status</div>
-								<div id="last-message-status" class="col text-start"></div>
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="lastMessageDialogLabel" data-i18n="dialog.lastmsg.title">Last Message</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="d-flex justify-content-center">
+					<div id="last-message-loading-indicator" class="spinner-border m-4" style="width: 8rem; height: 8rem;" role="status"></div>
+					<div id="last-message-info-container" class="card w-100" style1="width: 18rem;">
+						<img class="card-img-top">
+						<div class="card-footer">
+							<div class="container card-text">
+								<div class="row justify-content-md-center">
+									<div class="col text-end" data-i18n="dialog.lastmsg.status.label">Message Status</div>
+									<div id="last-message-status" class="col text-start"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="clear-message-button" type="button" class="btn btn-danger" data-bs-target="#clear-dialog" data-bs-toggle="modal" data-bs-dismiss="modal">Clear Message</button>
-      </div>
-    </div>
-  </div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="dialog.lastmsg.btn.close">Close</button>
+				<button id="clear-message-button" type="button" class="btn btn-danger" data-bs-target="#clear-dialog" data-bs-toggle="modal" data-bs-dismiss="modal" data-i18n="dialog.lastmsg.btn.confirm">Clear Message</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="clear-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="clearDialogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="clearDialogLabel">Clear display</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to clear the current and also the last cached message on the display?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-target="#last-message-dialog" data-bs-toggle="modal" data-bs-dismiss="modal">Close</button>
-        <button id="clear-message-confirm-button" type="button" class="btn btn-danger" data-bs-target="#last-message-dialog" data-bs-toggle="modal" data-bs-dismiss="modal">Clear</button>
-      </div>
-    </div>
-  </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="clearDialogLabel" data-i18n="dialog.clearmsg.title">Clear Message</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" data-i18n="dialog.clearmsg.content">
+				Are you sure you want to clear the current and also the last cached message on the display?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-target="#last-message-dialog" data-bs-toggle="modal" data-bs-dismiss="modal" data-i18n="dialog.clearmsg.btn.close">Close</button>
+				<button id="clear-message-confirm-button" type="button" class="btn btn-danger" data-bs-target="#last-message-dialog" data-bs-toggle="modal" data-bs-dismiss="modal" data-i18n="dialog.clearmsg.btn.confirm">Clear</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="save-settings-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="saveSettigsDialogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="saveSettigsDialogLabel">Save settings</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to save the settings on the display?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="save-settings-dialog-button" type="button" class="btn btn-success" data-bs-dismiss="modal">Save</button>
-      </div>
-    </div>
-  </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="saveSettigsDialogLabel" data-i18n="dialog.savesettings.title">Save settings</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" data-i18n="dialog.savesettings.content">
+				Are you sure you want to save the settings on the device?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="dialog.savesettings.btn.close">Close</button>
+				<button id="save-settings-dialog-button" type="button" class="btn btn-success" data-bs-dismiss="modal" data-i18n="dialog.savesettings.btn.confirm">Save</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="cloud-install-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cloudInstallDialogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cloudInstallDialogLabel">Download and install</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to download and install the client required fot the cloud service?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="cloud-install-dialog-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Install</button>
-      </div>
-    </div>
-  </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cloudInstallDialogLabel" data-i18n="dialog.cloud.install.title">Download and Install</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" data-i18n="dialog.cloud.install.content">
+				Are you sure you want to download and install the client required for remote access via the cloud service?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="dialog.cloud.install.btn.close">Close</button>
+				<button id="cloud-install-dialog-button" type="button" class="btn btn-primary" data-bs-dismiss="modal" data-i18n="dialog.cloud.install.btn.confirm">Install</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="cloud-logout-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cloudLogoutDialogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cloudLogoutDialogLabel">Logout</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to logout from the cloud service?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="cloud-logout-dialog-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Logout</button>
-      </div>
-    </div>
-  </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cloudLogoutDialogLabel" data-i18n="dialog.cloud.logout.title">Logout</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" data-i18n="dialog.cloud.logout.content">
+				Are you sure you want to logout from the cloud service?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="dialog.cloud.logout.btn.close">Close</button>
+				<button id="cloud-logout-dialog-button" type="button" class="btn btn-danger" data-bs-dismiss="modal" data-i18n="dialog.cloud.logout.btn.confirm">Logout</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="cloud-unregisterdevice-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cloudUnregisterDeviceDialogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cloudUnregisterDeviceDialogLabel">Unregister device</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to unregister this device from your cloud service account?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="cloud-unregisterdevice-dialog-button" type="button" class="btn btn-danger" data-bs-dismiss="modal">Unregister</button>
-      </div>
-    </div>
-  </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cloudUnregisterDeviceDialogLabel" data-i18n="dialog.cloud.unregister.title">Unregister device</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" data-i18n="dialog.cloud.unregister.content">
+				Are you sure you want to unregister (remove) this device from your cloud service account?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="dialog.cloud.unregister.btn.close">Close</button>
+				<button id="cloud-unregisterdevice-dialog-button" type="button" class="btn btn-danger" data-bs-dismiss="modal" data-i18n="dialog.cloud.unregister.btn.confirm">Unregister</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
@@ -509,6 +515,7 @@
 <script src="js/popper.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/fabric.min.js"></script>
+<script src="js/translator.min.js"></script>
 <script src="js/js.cookie.min.js"></script>
 <script src="js/loveboxpi.js"></script>
 

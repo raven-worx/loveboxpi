@@ -1,0 +1,225 @@
+{
+	"header": {
+		"nav": {
+			"message": "Message",
+			"cloud": "Cloud",
+			"settings": "Settings"
+		},
+		"cmd": {
+			"test": "Test",
+			"restart": "Restart",
+			"message": "Message"
+		}
+	},
+	"message": {
+		"canvas": {
+			"text": {
+				"font": "Font",
+				"addtext": "Add text item"
+			},
+			"emojicons": {
+				"recentlyused": "Recently used"
+			}
+		},
+		"btn": {
+			"clear": "Clear Canvas",
+			"send": "Send Message"
+		}
+	},
+	"cloud": {
+		"login": {
+			"title": "Login",
+			"form": {
+				"label": "Enter your account credentials",
+				"note": "NOTE: SSO account credentials (Google) are not supported.",
+				"email": "Email address",
+				"password": "Password"
+			},
+			"loggedin": "You are currently logged in as",
+			"btn": {
+				"login": "Login",
+				"logout": "Logout"
+			}
+		},
+		"register": {
+			"title": "Register",
+			"devicename": "Device name",
+			"desc": "Specify a name for this device. This name appears in the list of devices in your cloud service.",
+			"registered": "The device is currently registered as",
+			"btn": {
+				"register": "Register device",
+				"unregister": "Unregister device"
+			}
+		},
+		"info": {
+			"title": "Info",
+			"installed": "Installed",
+			"loggedin": "Logged in",
+			"registered": "Device registered",
+			"serviceadded": "Service added",
+			"btn": {
+				"install": "Install"
+			}
+		}
+	},
+	"settings": {
+		"userinterface": {
+			"title": "User Interface",
+			"language": {
+				"name": "Language",
+				"desc": "Select the language of the user interface and the display",
+				"invalid": "No language selected"
+			}
+		},
+		"led": {
+			"title": "LED",
+			"desc": "The LED is used to notify about a new message received.",
+			"enabled": {
+				"name": "Enabled",
+				"desc": "If enabled the LED pulsates when a new message is received on the box."
+			},
+			"color": {
+				"name": "Color",
+				"desc": "The color of the illuminated LED"
+			},
+			"gpios": {
+				"name": "GPIOs",
+				"desc": "GPIO pins for the connected RGB LED in Broadcom (BCM) pin numbering",
+				"invalid": "Duplicate or no GPIO value selected"
+			}
+		},
+		"buttons": {
+			"title": "Buttons",
+			"desc": "Specify the button's enabled state, GPIO pin - in Broadcom (BCM) pin numbering - and the assigned action which should be executed when the button is pressed.",
+			"invalid": "Duplicate or no GPIO value selected",
+			"action": {
+				"readmsg": "Mark message read",
+				"netinfo": "Display network info",
+				"lastmsg": "Show last message",
+				"clearmsg": "Clear message"
+			}
+		},
+		"display": {
+			"title": "Display",
+			"note": "Display setting changes require a restart of the server to take effect",
+			"type": {
+				"name": "Type",
+				"desc": "Select the connected Waveshare ePaper display type",
+				"invalid": "No display type selected"
+			},
+			"rotation": {
+				"name": "Rotation",
+				"desc": "Rotation of the content displayed"
+			}
+		},
+		"server": {
+			"title": "Server",
+			"note": "Server setting changes require a restart of the server to take effect",
+			"host": {
+				"label": "Host",
+				"desc": "The IP address of the network interface the webserver should listen on. The last section should end with '0'. Use '0.0.0.0' for all network interfaces (Wifi, LAN, etc).",
+				"invalid": "Specify a valid IP address ([0-254].[0-254].[0-254].[0-254])."
+			},
+			"port": {
+				"label": "Port",
+				"desc": "The network port the webserver should listen on. Port '80' is the default port for HTTP.",
+				"invalid": "Specify a valid port number in the range from 1 to 65535."
+			}
+		},
+		"btn": {
+			"load": "Load",
+			"save": "Save"
+		}
+	},
+	"alert": {
+		"cmd": {
+			"success": "Successfully executed command '$$'",
+			"fail": "Failed to execute command '$$'"
+		},
+		"lastmsg": {
+			"fail": "Failed to get last message"
+		},
+		"setmsg": {
+			"success": "Successfully set message",
+			"fail": "Failed to set message"
+		},
+		"clearmsg": {
+			"success": "Successfully cleared message",
+			"fail": "Failed to clear message"
+		},
+		"savesettings": {
+			"success": "Successfully saved settings",
+			"fail": "Failed to save settings"
+		},
+		"loadsettings": {
+			"fail": "Failed to retrieve settings"
+		},
+		"cloud": {
+			"success": "Cloud '$$' was successfull",
+			"fail": "Cloud '$$' failed"
+		}
+	},
+	"dialog": {
+		"lastmsg": {
+			"title": "Last Message",
+			"status": {
+				"label": "Message Status",
+				"active": "active",
+				"inactive": "inactive",
+				"read": "read"
+			},
+			"btn": {
+				"close": "Close",
+				"confirm": "Clear Message"
+			}
+		},
+		"clearmsg": {
+			"title": "Clear Message",
+			"content": "Are you sure you want to clear the current and also the last cached message on the display?",
+			"btn": {
+				"close": "Close",
+				"confirm": "Clear Message"
+			}
+		},
+		"savesettings": {
+			"title": "Save Settings",
+			"content": "Are you sure you want to save the settings on the device?",
+			"btn": {
+				"close": "Close",
+				"confirm": "Save"
+			}
+			
+		},
+		"cloud": {
+			"install": {
+				"title": "Download and Install",
+				"content": "Are you sure you want to download and install the client required for remote access via the cloud service?",
+				"btn": {
+					"close": "Close",
+					"confirm": "Install"
+				}
+			},
+			"logout": {
+				"title": "Logout",
+				"content": "Are you sure you want to logout from the cloud service?",
+				"btn": {
+					"close": "Close",
+					"confirm": "Logout"
+				}
+			},
+			"unregister": {
+				"title": "Unregister device",
+				"content": "Are you sure you want to unregister (remove) this device from your cloud service account?",
+				"btn": {
+					"close": "Close",
+					"confirm": "Unregister"
+				}
+			}
+		}
+	},
+	"display": {
+		"hostname": "Hostname",
+		"ipaddress": "IP Address",
+		"nomessage": "No message\nto show"
+	}
+}

@@ -1,0 +1,225 @@
+{
+	"header": {
+		"nav": {
+			"message": "Nachricht",
+			"cloud": "Cloud",
+			"settings": "Einstellungen"
+		},
+		"cmd": {
+			"test": "Test",
+			"restart": "Neustart",
+			"message": "Nachricht"
+		}
+	},
+	"message": {
+		"canvas": {
+			"text": {
+				"font": "Schriftart",
+				"addtext": "Text Element hinzufügen"
+			},
+			"emojicons": {
+				"recentlyused": "Zuletzt verwendet"
+			}
+		},
+		"btn": {
+			"clear": "Zeichenfläche leeren",
+			"send": "Nachricht senden"
+		}
+	},
+	"cloud": {
+		"login": {
+			"title": "Anmelden",
+			"form": {
+				"label": "Zugangsdaten eingeben",
+				"note": "HINWEIS: SSO Anmeldung (Google) wird nicht unterstützt.",
+				"email": "Email Adresse",
+				"password": "Passwort"
+			},
+			"loggedin": "Derzeit angemeldet",
+			"btn": {
+				"login": "Anmelden",
+				"logout": "Abmelden"
+			}
+		},
+		"register": {
+			"title": "Registrierung",
+			"devicename": "Gerätename",
+			"desc": "Name des Geräts. Dieser Name taucht in der Liste der Geräte im Cloud-Benutzerkonto auf.",
+			"registered": "Das Gerät ist derzeit registriert als",
+			"btn": {
+				"register": "Gerät registrieren",
+				"unregister": "Gerät entfernen"
+			}
+		},
+		"info": {
+			"title": "Info",
+			"installed": "Installiert",
+			"loggedin": "Angemeldet",
+			"registered": "Gerät registriert",
+			"serviceadded": "Service hinzugefügt",
+			"btn": {
+				"install": "Installation"
+			}
+		}
+	},
+	"settings": {
+		"userinterface": {
+			"title": "Benutzeroberfläche",
+			"language": {
+				"name": "Sprache",
+				"desc": "Die Sprache der Benutzeroberfläche sowie der Anzeige",
+				"invalid": "Keine Sprache ausgewählt"
+			}
+		},
+		"led": {
+			"title": "LED",
+			"desc": "Die LED wird als Benachrichtigung beim Empfang einer neuen Nachricht verwendet.",
+			"enabled": {
+				"name": "Aktiv",
+				"desc": "Wenn aktiv, pulsiert die LED beim Empfang einer neuen Nachricht auf der Box."
+			},
+			"color": {
+				"name": "Farbe",
+				"desc": "Die Leuchtfarbe der LED"
+			},
+			"gpios": {
+				"name": "GPIOs",
+				"desc": "Die GPIO Pins der angeschlossenen LED - in Broadcom (BCM) Anschlussbelegung",
+				"invalid": "Doppelter oder kein GPIO Wert ausgewählt"
+			}
+		},
+		"buttons": {
+			"title": "Schalter",
+			"desc": "Auswahl des Aktiv Zustands, des GPIO Pins - in Broadcom (BCM) Anschlussbelegung - und die auszuführende Aktion beim Betätigen des Schalters.",
+			"invalid": "Doppelter oder kein GPIO Wert ausgewählt",
+			"action": {
+				"readmsg": "Nachricht als gelesen markieren",
+				"netinfo": "Netzwerk Info anzeigen",
+				"lastmsg": "Letzte Nachricht anzeigen",
+				"clearmsg": "Nachricht löschen"
+			}
+		},
+		"display": {
+			"title": "Anzeige",
+			"note": "Änderungen an den Anzeige-Einstellungen werden erst beim nächsten Start des Servers übernommen",
+			"type": {
+				"name": "Typ",
+				"desc": "Auswahl des angeschlossenen Waveshare ePaper Displays",
+				"invalid": "Kein Display ausgewählt"
+			},
+			"rotation": {
+				"name": "Rotation",
+				"desc": "Rotation des angezeigten Inhalts auf dem Display"
+			}
+		},
+		"server": {
+			"title": "Server",
+			"note": "Änderungen an den Server-Einstellungen werden erst beim nächsten Start des Servers übernommen",
+			"host": {
+				"label": "Host",
+				"desc": "Die IP-Adresse der Netzwerkverbindung auf der der Webserver gestartet werden soll. Der letzte Abschnitt muss mit '0' enden. Der Wert '0.0.0.0' startet den Server auf allen Netzwerkverbindungen (Wifi, LAN, etc).",
+				"invalid": "Eine gültige IP-Adresse in der Form '[0-254].[0-254].[0-254].[0-254]'"
+			},
+			"port": {
+				"label": "Port",
+				"desc": "Der Netzwerk-Port des Webservers. Port '80' ist der Standard-Port für HTTP.",
+				"invalid": "Ein gültiger Netzwerk-Port Wert liegt zwischen 1 und 65535"
+			}
+		},
+		"btn": {
+			"load": "Laden",
+			"save": "Speichern"
+		}
+	},
+	"alert": {
+		"cmd": {
+			"success": "Befehl '$$' erfolgreich",
+			"fail": "Befehl '$$' fehlgeschlagen"
+		},
+		"lastmsg": {
+			"fail": "Abfrage letzter Nachricht fehlgeschlagen"
+		},
+		"setmsg": {
+			"success": "Nachricht erfolgreich gesendet",
+			"fail": "Senden der Nachricht fehlgeschlagen"
+		},
+		"clearmsg": {
+			"success": "Nachricht erfolgreich gelöscht",
+			"fail": "Löschen der Nachricht fehlgeschlagen"
+		},
+		"savesettings": {
+			"success": "Einstellungen erfolgreich gespeichert",
+			"fail": "Speichern der Einstellungen fehlgeschlagen"
+		},
+		"loadsettings": {
+			"fail": "Laden der Einstellungen fehlgeschlagen"
+		},
+		"cloud": {
+			"success": "Cloud '$$' erfolgreich",
+			"fail": "Cloud '$$' fehlgeschlagen"
+		}
+	},
+	"dialog": {
+		"lastmsg": {
+			"title": "Letzte Nachricht",
+			"status": {
+				"label": "Status Nachricht",
+				"active": "aktiv",
+				"inactive": "inaktiv",
+				"read": "gelesen"
+			},
+			"btn": {
+				"close": "Schliessen",
+				"confirm": "Nachricht löschen"
+			}
+		},
+		"clearmsg": {
+			"title": "Nachricht löschen",
+			"content": "Sicher dass die aktuelle sowie die letzte gespeicherte Nachricht auf dem Gerät gelöscht werden soll?",
+			"btn": {
+				"close": "Schliessen",
+				"confirm": "Nachricht löschen"
+			}
+		},
+		"savesettings": {
+			"title": "Einstellungen speichern",
+			"content": "Sicher dass die Einstelleungen am Gerät gespeichert werden sollen?",
+			"btn": {
+				"close": "Schliessen",
+				"confirm": "Speichern"
+			}
+			
+		},
+		"cloud": {
+			"install": {
+				"title": "Download und Installation",
+				"content": "Sicher dass die benötigte Anwendung für den Fernzugriff via Cloud heruntergeladen und installiert werden soll?",
+				"btn": {
+					"close": "Schliessen",
+					"confirm": "Installieren"
+				}
+			},
+			"logout": {
+				"title": "Abmelden",
+				"content": "Sicher dass das Gerät vom Cloud Service abgemeldet werden soll?",
+				"btn": {
+					"close": "Schliessen",
+					"confirm": "Abmelden"
+				}
+			},
+			"unregister": {
+				"title": "Gerät entfernen",
+				"content": "Sicher dass das Gerät vom Cloud Service entfernt werden soll?",
+				"btn": {
+					"close": "Schliessen",
+					"confirm": "Entfernen"
+				}
+			}
+		}
+	},
+	"display": {
+		"hostname": "Hostname",
+		"ipaddress": "IP Adresse",
+		"nomessage": "Keine Nachricht\nvorhanden"
+	}
+}

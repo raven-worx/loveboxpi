@@ -6,9 +6,12 @@ import copy
 _ConfigFilePath = "/etc/loveboxpi/loveboxpi.conf"
 
 _DefaultSettings = {
+	"general": {
+		"lang": "en"
+	},
 	"www": {
 		"host": "0.0.0.0",
-		"port": 8080
+		"port": 80
 	},
 	"display": {
 		"type": "epd2in7",
@@ -25,9 +28,9 @@ _DefaultSettings = {
 		"action": "hostinfo"
 	},
 	"button3": {
-		"enabled": 0,
+		"enabled": 1,
 		"pin": "GPIO13",
-		"action": ""
+		"action": "lastmsg"
 	},
 	"button4": {
 		"enabled": 0,

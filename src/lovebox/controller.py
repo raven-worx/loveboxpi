@@ -11,6 +11,7 @@ from . import display
 from . import led
 from . import cloud
 from . import button
+from . import translator
 
 _MUTEX = threading.Lock()
 
@@ -42,6 +43,7 @@ class Controller:
 		for i in range(1,self._BUTTON_COUNT+1):
 			b = button.Button(i,self)
 			self.buttons.append(b)
+		self.translator = translator.Translator()
 		self.update()
 	
 	def __del__(self):
@@ -127,6 +129,7 @@ class Controller:
 		self.led.settingsUpdated()
 		for b in self.buttons:
 			b.settingsUpdated()
+		self.translator.settingsUpdated()
 		self._restoreState()
 	
 	def setMessage(self,imageData64):
@@ -149,7 +152,7 @@ class Controller:
 		if imageData:
 			self.display.writeImage(imageData)
 		else:
-			self.display.writeText("No message\nto show", fontsize=(15,25), alignment='center')
+			self.display.writeText(self.translator.tr('display.nomessage'), fontsize=(15,25), alignment='center')
 		time.sleep(1)
 		self._restoreState()
 		return True
@@ -183,7 +186,8 @@ class Controller:
 		hostname = socket.gethostname()
 		local_ip = (([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [[(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["---"])[0]
 		self.display.writeText(
-			"Hostname:\n " + hostname + "\nIP:\n " + local_ip,
+			self.translator.tr('display.hostname') + ':\n ' + hostname + '\n' +
+			self.translator.tr('display.ipaddress') + ':\n ' + local_ip,
 			fontsize=(12,20)
 		)
 		time.sleep(1)
@@ -195,7 +199,8 @@ class Controller:
 		js = {
 			"version": self.VERSION,
 			"display": self.display.INFO,
-			"cloud": self.cloud.INFO
+			"cloud": self.cloud.INFO,
+			"i18n": self.translator.INFO
 		}
 		return json.dumps(js)
 	
@@ -205,7 +210,6 @@ class Controller:
 		imageData = self._readActiveImage()
 		if imageData:
 			imageDataUrl = "data:image/png;base64," + base64.b64encode(imageData).decode("utf-8")
-		
 		js = {
 			"active": self.active_message,
 			"readTimestamp": self._readReadTimestamp(),

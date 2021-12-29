@@ -48,7 +48,7 @@ function setButtonLoading(btn, loading) {
 }
 
 function showSuccessMessage(msg) {
-	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px; z-index: 10000;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
+	var alertEl = $("<div class=\"alert alert-success alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 20px; z-index: 10000;\" role=\"alert\"><i class=\"bi bi-check-circle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
@@ -56,7 +56,7 @@ function showSuccessMessage(msg) {
 }
 
 function showErrorMessage(msg) {
-	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 50px; z-index: 10000;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
+	var alertEl = $("<div class=\"alert alert-danger alert-dismissible fade show hide position-fixed w-75 start-50 translate-middle-x\" style=\"bottom: 20px; z-index: 10000;\" role=\"alert\"><i class=\"bi bi-exclamation-triangle-fill\"></i> " + msg + "</div>")
 	$("body").append(alertEl)
 	setTimeout(function() {
 		bootstrap.Alert.getOrCreateInstance( alertEl.get(0) ).close()
@@ -79,10 +79,10 @@ function sendCmd(cmd, params, btn) {
 		contentType: "application/json"
 	})
 	.done(function() {
-		showSuccessMessage("Successfully executed command '" + cmd + "'")
+		showSuccessMessage( $.i18n.tr('alert.cmd.success').arg(cmd) )
 	})
 	.fail(function() {
-		showErrorMessage("Failed to execute command '" + cmd + "'")
+		showErrorMessage( $.i18n.tr('alert.cmd.fail').arg(cmd) )
 	})
 	.always(function() {
 		if( btn )
@@ -95,10 +95,14 @@ function retrieveLastMessageInfo()
 	var loader = $('#last-message-dialog #last-message-loading-indicator')
 	var info = $('#last-message-dialog #last-message-info-container')
 	
+	var badgeActive = '<span class="badge bg-success" data-i18n="dialog.lastmsg.status.active">' + $.i18n.tr('dialog.lastmsg.status.active') + '</span>'
+	var badgeInactive = '<span class="badge bg-secondary" data-i18n="dialog.lastmsg.status.inactive">' + $.i18n.tr('dialog.lastmsg.status.inactive') + '</span>'
+	var badgeRead = '<span class="badge bg-success" data-i18n="dialog.lastmsg.status.read">' + $.i18n.tr('dialog.lastmsg.status.read') + '</span>'
+	
 	loader.show()
 	info.hide()
 	info.find('img').attr('src', '')
-	info.find('#last-message-status').empty().append('<span class="badge bg-secondary">inactive</span>')
+	info.find('#last-message-status').empty().append( badgeInactive )
 	
 	$.ajax({
 		method: "GET",
@@ -109,13 +113,13 @@ function retrieveLastMessageInfo()
 	.done(function(data) {
 		if( data.imageUrl.length != "" )
 			info.find('img').attr('src', data.imageUrl)
-		var contentBadge = data.active ? '<span class="badge bg-success">active</span>' : '<span class="badge bg-secondary">inactive</span>'
+		var contentBadge = data.active ? badgeActive : badgeInactive
 		if( data.readTimestamp != "" )
-			contentBadge = '<span class="badge bg-success">read</span> <span>' + new Date(data.readTimestamp).toLocaleString() + '</span>'
+			contentBadge = badgeRead + ' <span>' + new Date(data.readTimestamp).toLocaleString() + '</span>'
 		info.find('#last-message-status').empty().append( $(contentBadge) )
 	})
 	.fail(function() {
-		showErrorMessage("Failed to get last message")
+		showErrorMessage( $.i18n.tr('alert.lastmsg.fail') )
 	})
 	.always(function() {
 		loader.hide()
@@ -137,10 +141,10 @@ function setMessage(btn) {
 		timeout: 10000
 	})
 	.done(function() {
-		showSuccessMessage("Successfully set message")
+		showSuccessMessage( $.i18n.tr('alert.setmsg.success') )
 	})
 	.fail(function() {
-		showErrorMessage("Failed to set message")
+		showErrorMessage( $.i18n.tr('alert.setmsg.fail') )
 	})
 	.always(function() {
 		if( btn )
@@ -158,11 +162,11 @@ function clearMessage(btn) {
 		timeout: 10000
 	})
 	.done(function() {
-		showSuccessMessage("Successfully cleared message");
+		showSuccessMessage( $.i18n.tr('alert.clearmsg.success') );
 		retrieveLastMessageInfo()
 	})
 	.fail(function() {
-		showErrorMessage("Failed to clear message")
+		showErrorMessage( $.i18n.tr('alert.clearmsg.fail') )
 	})
 	.always(function() {
 		if( btn )
@@ -272,6 +276,9 @@ function validateSettingsForm() {
 
 function saveSettings(btn) {
 	var formData = {
+		"general": {
+			"lang": $("form#settings-form #interface_lang").val()
+		},
 		"led": {
 			"enabled": $("form#settings-form input#led_enabled").is(":checked") ? 1 : 0,
 			"color": $("form#settings-form #led_color_value").text().trim(),
@@ -321,11 +328,11 @@ function saveSettings(btn) {
 		timeout: 10000
 	})
 	.done(function() {
-		showSuccessMessage("Successfully saved settings")
+		showSuccessMessage( $.i18n.tr('alert.savesettings.success') )
 		retrieveInfo()
 	})
 	.fail(function() {
-		showErrorMessage("Failed to save settings")
+		showErrorMessage( $.i18n.tr('alert.savesettings.fail') )
 	})
 	.always(function() {
 		if( btn )
@@ -345,6 +352,8 @@ function retrieveSettings(btn) {
 		timeout: 10000
 	})
 	.done(function(data) {
+		$("form#settings-form #interface_lang").val(data.general.lang)
+		
 		$("form#settings-form #led_enabled").prop('checked', data.led.enabled == "True" || data.led.enabled == "1")
 		$("form#settings-form #led_gpio_r").val(data.led.pin_r)
 		$("form#settings-form #led_gpio_g").val(data.led.pin_g)
@@ -376,7 +385,7 @@ function retrieveSettings(btn) {
 		validateSettingsForm()
 	})
 	.fail(function() {
-		console.error("Failed to retrieve settings")
+		console.error( $.i18n.tr('alert.loadsettings.fail') )
 	})
 	.always(function() {
 		if( btn )
@@ -396,12 +405,27 @@ function retrieveInfo() {
 		$("#navbarContent #nav-version-text").text("v"+data.version)
 		
 		// SETTINGS
-		data.display.availableTypes.sort().forEach(item => {
-			$("form#settings-form select#display_type").append($("<option>", {
-				value: item,
-				text: item
-			}));
-		});
+		var langSelect = $("form#settings-form select#interface_lang")
+		if( langSelect.find('option').length == 0 )
+		{
+			data.i18n.availableTranslations.forEach(item => {
+				langSelect.append($("<option>", {
+					value: item,
+					text: item
+				}));
+			});
+		}
+		
+		var displaySelect = $("form#settings-form select#display_type")
+		if( displaySelect.find('option').length == 0 )
+		{
+			data.display.availableTypes.sort().forEach(item => {
+				displaySelect.append($("<option>", {
+					value: item,
+					text: item
+				}));
+			});
+		}
 		
 		// CANVAS
 		let canvas = $("#editor_canvas").prop("fabric")
@@ -446,9 +470,12 @@ function retrieveInfo() {
 		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-loggedin'), cloud.status.loggedin)
 		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-deviceregistered'), cloud.status.device_registered)
 		setCloudInfoValueIcon( $('#cloud-page #cloud-pane-info #cloud-info-value-serviceadded'), cloud.status.service_added)
+		
+		// TRANSLATION
+		$.i18n.setTranslationData(data.i18n.lang, data.i18n.translationData)
 	})
 	.fail(function() {
-		console.error("Failed to retrieve settings")
+		console.error("Failed to retrieve info")
 	})
 	.always(function() {
 	});
@@ -470,11 +497,11 @@ function sendCloudCmd(cmd, params, btn) {
 		timeout: 15000
 	})
 	.done(function() {
-		showSuccessMessage("Cloud '" + cmd + "' was successfull")
+		showSuccessMessage( $.i18n.tr('alert.cloud.success').arg(cmd) )
 		retrieveInfo()
 	})
 	.fail(function() {
-		showErrorMessage("Cloud '" + cmd + "' failed")
+		showErrorMessage( $.i18n.tr('alert.cloud.fail').arg(cmd) )
 	})
 	.always(function() {
 		if( btn )
@@ -521,6 +548,53 @@ function addEmojiButton(emojiVal, parentElement, isRecentltyUsed)
 */
 
 $( document ).ready(function() {
+	String.prototype.arg = function (arg) {
+		return this.replace('$$',String(arg));
+	};
+	
+	/*
+		TRANSLATION
+	*/
+	var translator = new Translator({
+		defaultLanguage: '',
+		detectLanguage: false,
+		selector: '[data-i18n]',
+		debug: false,
+		registerGlobally: '__',
+		persist: false,
+		persistKey: 'preferred_language',
+		filesLocation: '/i18n',
+	});
+	//window.I18N = translator
+	
+	$.i18n = {
+		tr: function (key) {
+			var t = translator.translateForKey(key)
+			if( t ) {
+				return String(t)
+			} else {
+				if( translator.currentLanguage != '' )
+					console.warn('No translation found for key:', key)
+				return ''
+			}
+		},
+		translateElement: function(el) {
+			$(el).find('[data-i18n]').each( function() {
+				var key = $(this).attr('data-i18n')
+				$(this).html( $.i18n.tr(key) )
+			});
+		},
+		setTranslationData: function (lang,data) {
+			if( lang != translator.currentLanguage )
+			{
+				translator.remove(translator.defaultLanguage)
+				translator.add(lang, data)
+				translator.setDefaultLanguage(lang)
+				translator.translatePageTo()
+			}
+		}
+	}
+	
 	/*
 		NAVIGATION
 	*/
@@ -634,16 +708,16 @@ $( document ).ready(function() {
 	.each(function() {
 		$(this).append(
 				$("<option>", {
-					value: '',
-					text: ''
+					'value': '',
+					'text': ''
 				})
 			);
 		for(var i = 2; i <= 27; i++) {
 			var val = "GPIO"+i
 			$(this).append(
 				$("<option>", {
-					value: val,
-					text: val
+					'value': val,
+					'text': val
 				})
 			);
 		}
@@ -653,21 +727,22 @@ $( document ).ready(function() {
 	.each(function () {
 		$(this).append(
 				$("<option>", {
-					disabled: true,
-					value: '',
-					text: ''
+					'disabled': true,
+					'value': '',
+					'text': ''
 				})
 			);
 		var actions = {
-			"readmsg": "Mark message read",
-			"netinfo": "Display network info",
-			"lastmsg": "Show last message",
-			"clearmsg": "Clear message"
+			'readmsg': 'settings.buttons.action.readmsg',
+			'netinfo': 'settings.buttons.action.netinfo',
+			'lastmsg': 'settings.buttons.action.lastmsg',
+			'clearmsg': 'settings.buttons.action.clearmsg'
 		}
 		for(var a in actions) {
 			$(this).append($("<option>", {
-				value: a,
-				text: actions[a]
+				'value': a,
+				'text': $.i18n.tr(actions[a]),
+				'data-i18n': actions[a]
 			}));
 		}
 	})
@@ -683,9 +758,9 @@ $( document ).ready(function() {
 		
 		for(var f in fonts) {
 			$(this).append($("<option>", {
-				value: fonts[f],
-				text: fonts[f],
-				selected: fonts[f] == Cookies.get('editor_selected_font')
+				'value': fonts[f],
+				'text': fonts[f],
+				'selected': fonts[f] == Cookies.get('editor_selected_font')
 			}));
 		}
 		
@@ -867,6 +942,7 @@ $( document ).ready(function() {
 			})
 			
 			$(popoverTriggerEl).attr('data-popover-visible', 'true')
+			$.i18n.translateElement(popover.tip)
 		})
 		popoverTriggerEl.addEventListener('hide.bs.popover', function () {
 			$(popoverTriggerEl).attr('data-popover-visible', 'false')

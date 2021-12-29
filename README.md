@@ -3,7 +3,7 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/raven-worx/loveboxpi?logo=github&sort=semver)](https://github.com/raven-worx/loveboxpi/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-This is an easy DIY lovebox implementation using a simple e-paper display and a RaspberryPi.
+This is a DIY lovebox implementation using a simple Waveshare e-paper display and a RaspberryPi.
 
 ## Features
 
@@ -38,6 +38,7 @@ LoveboxPi is built upon/with the following software components:
 * [fabricjs](http://fabricjs.com/) v4.6.0
 * [js.cookie](https://github.com/js-cookie/js-cookie) v3.0.1
 * [EmojiSymbols](https://emojisymbols.com/) webfont
+* [Simple-Translator](https://github.com/andreasremdt/simple-translator) v2.0.4
 * [remote.it CLI tool](https://docs.remote.it/software/cli)
 
 ## Prepare your RaspberryPi
