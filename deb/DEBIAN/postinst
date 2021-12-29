@@ -3,4 +3,4 @@ set -e
 
 systemctl --system daemon-reload >/dev/null || true
 systemctl --system enable loveboxpi >/dev/null || true
-systemctl --system start loveboxpi >/dev/null || true
+systemctl --system restart loveboxpi >/dev/null || true
