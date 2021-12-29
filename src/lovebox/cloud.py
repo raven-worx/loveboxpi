@@ -75,8 +75,10 @@ class Cloud:
 		elif cmd == 'register_device':
 			res = self.registerDevice(params['name'])
 			if res:
+				self.device_registered = True
 				config_port = config.readSetting('www','port')
-				self.addService(config_port)
+				if self.addService(config_port):
+					time.sleep(10)
 		elif cmd == 'unregister_device':
 			res = self.unregisterDevice()
 		
