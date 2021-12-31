@@ -5,6 +5,8 @@
 
 This is a DIY lovebox implementation using a simple Waveshare e-paper display and a RaspberryPi.
 
+[![Watch LoveboxPi Demo on YOUTUBE](http://img.youtube.com/vi/fF88PX4ILu4/0.jpg)](http://www.youtube.com/watch?v=fF88PX4ILu4 "Watch LoveboxPi Demo on YOUTUBE")
+
 ## Features
 
 * Web-Interface to control and configure LoveboxPi
