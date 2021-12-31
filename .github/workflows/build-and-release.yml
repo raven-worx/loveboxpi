@@ -81,6 +81,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - name: Generate Changelog
+        uses: Bullrich/generate-release-changelog@master
+        id: changelog
+        env:
+          REPO: ${{ github.repository }}
+      
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
@@ -89,7 +95,8 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{needs.build-artifacts.outputs.version}}
-          body_path: RELEASE.md
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
 
