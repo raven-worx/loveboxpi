@@ -77,11 +77,19 @@ class Display:
 		self.INFO['effectiveHeight'] = self.effectiveHeight
 		return True
 	
+	def _removeAlpha(self, img, bg_color = (255,255,255)):
+		if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+			alpha = img.convert('RGBA').split()[-1]
+			bg = Image.new('RGBA', img.size, bg_color+(255,))
+			bg.paste(img, mask=alpha)
+			return bg
+		else:
+			return img
+	
 	def clear(self):
 		if epd := self._EPD():
 			epd.Clear();
-			#image = Image.new('1', (epd.width,epd.height), 255)
-			#epd.display(epd.getbuffer(image))
+			#epd.display(epd.getbuffer( Image.new('1', (epd.width,epd.height), 255) ))
 			epd.sleep()
 			return True
 		return False
@@ -89,6 +97,7 @@ class Display:
 	def writeImage(self,imageData):
 		if epd := self._EPD():
 			image = Image.open(io.BytesIO(imageData))
+			image = self._removeAlpha(image)
 			if self.rotation == 90:
 				image = image.transpose(Image.ROTATE_90)
 			elif self.rotation == 180:
@@ -102,7 +111,7 @@ class Display:
 	
 	def writeText(self, text, fontsize=(12,20), alignment='left'):
 		if epd := self._EPD():
-			image = Image.new('1', (self.effectiveWidth,self.effectiveHeight), 255)  # 255: clear the frame
+			image = Image.new('1', (self.effectiveWidth,self.effectiveHeight), 255)
 			draw = ImageDraw.Draw(image)
 			
 			if self.effectiveHeight >= self.effectiveWidth:
