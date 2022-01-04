@@ -783,6 +783,8 @@ $( document ).ready(function() {
 	canvas.setEditorMode = function(mode) {
 		if( this.editorMode == mode )
 			return
+		if( !mode )
+			mode = 'freedraw'
 		
 		switch(mode) {
 			case "selection":
@@ -800,13 +802,13 @@ $( document ).ready(function() {
 				break;
 		}
 		
-		var selectionMode = mode == "selection" || !mode
+		var selectionMode = mode == "selection"
 		this.forEachObject(function(obj) {
 			obj.selectable = selectionMode;
 		});
 		this.requestRenderAll();
 		
-		this.editorMode = selectionMode ? "selection" : mode
+		this.editorMode = mode
 		var editorModeButton = $("input[type=radio][name=editor_mode][value=" + mode + "]")
 		editorModeButton.prop("checked",true)
 		editorModeButton[0].focus()
@@ -866,7 +868,7 @@ $( document ).ready(function() {
 	});
 	
 	canvas.setBrushSize( $('input#editor_brush_size_slider').val() )
-	canvas.setEditorMode("selection")
+	canvas.setEditorMode('freedraw')
 	canvas.setActiveElementType('')
 	
 	$('input[type=radio][name=editor_mode]').change( function() {
