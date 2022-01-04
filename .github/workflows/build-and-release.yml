@@ -23,6 +23,8 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
       version_num: ${{ steps.version.outputs.version_num }}
+      archive_filename: ${{ steps.create-archive.outputs.file_name }}
+      deb_filename: ${{ steps.build-deb.outputs.file_name }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -56,16 +58,18 @@ jobs:
         shell: bash
         
       - name: Create archive
-        run: tar czf $ARCHIVE_NAME -C dist .
+        run: |
+          tar czf $ARCHIVE_NAME -C dist .
+          echo "::set-output name=file_name::$ARCHIVE_NAME"
         env:
           ARCHIVE_NAME: loveboxpi_${{ steps.version.outputs.version_num }}.tar.gz
+        id: create-archive
       - name: Upload archive artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifact-archive
-          path: |
-            *.tar.gz
-            
+          path: ${{ steps.create-archive.outputs.file_name }}
+        
       - name: Build deb package
         uses: jiro4989/build-deb-action@v2
         with:
@@ -76,12 +80,12 @@ jobs:
           arch: 'armhf'
           depends: 'python3,python3-rpi.gpio,python3-gpiozero,python3-spidev,python3-numpy,python3-pil,python3-colormap'
           desc: 'LoveboxPi'
+        id: build-deb
       - name: Upload deb artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifact-deb
-          path: |
-            *.deb
+          path: ${{ steps.build-deb.outputs.file_name }}
   
   create-release:
     runs-on: ubuntu-latest
@@ -129,29 +133,22 @@ jobs:
           name: artifact-deb
           path: dist
         
-      - name: Retrieve meta info 
-        id: vars
-        run: |
-          cd dist
-          echo "::set-output name=deb_name::$(ls *.deb | head -n 1)"
-          echo "::set-output name=archive_name::$(ls *.tar.gz | head -n 1)"
-          
       - name: Upload archive artifact
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/${{ steps.vars.outputs.archive_name }}
-          asset_name: ${{ steps.vars.outputs.archive_name }}
+          asset_path: dist/${{ needs.build-artifacts.outputs.archive_filename }}
+          asset_name: ${{ needs.build-artifacts.outputs.archive_filename }}
           asset_content_type: application/gzip
-          
+        
       - name: Upload deb artifact
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/${{ steps.vars.outputs.deb_name }}
-          asset_name: ${{ steps.vars.outputs.deb_name }}
+          asset_path: dist/${{ needs.build-artifacts.outputs.deb_filename }}
+          asset_name: ${{ needs.build-artifacts.outputs.deb_filename }}
           asset_content_type: application/vnd.debian.binary-package
