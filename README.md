@@ -13,6 +13,7 @@ This is a DIY lovebox implementation using a Waveshare e-paper display and a Ras
 * Remote access over internet via [remote.it service](https://remote.it/)
 * support for notification LED
 * support for up to 4 HW buttons with assignable actions
+* REST interface (see specification in openapi folder - e.g. use [swagger](http://swagger.io/))
 
 ## Hardware
 

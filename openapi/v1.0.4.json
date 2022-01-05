@@ -1,0 +1,624 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "LoveboxPi",
+    "version": "1.0.4",
+    "contact": {
+      "name": "LoveboxPi",
+      "url": "https://github.com/raven-worx/loveboxpi"
+    },
+    "license": {
+      "name": "GPLv3",
+      "url": "https://github.com/raven-worx/loveboxpi/blob/master/LICENSE"
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "http://loveboxpi/api/v1"
+    },
+    {
+      "url": "http://{IP}/api/v1",
+      "variables": {
+        "IP": {
+          "default": "loveboxpi"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "message",
+      "description": "Operations about the message shown on the display"
+    },
+    {
+      "name": "settings",
+      "description": "Operations about the settings"
+    },
+    {
+      "name": "info",
+      "description": "General initialization data"
+    },
+    {
+      "name": "cmd",
+      "description": "Commands to be executed"
+    },
+    {
+      "name": "cloud",
+      "description": "Operations regarding cloud integration"
+    }
+  ],
+  "paths": {
+    "/message": {
+      "get": {
+        "tags": [
+          "message"
+        ],
+        "summary": "Get current/last message set on display",
+        "description": "Gets the current or last message set to the display, this includes the state and the PNG image data",
+        "operationId": "getMessage",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageInfo"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "message"
+        ],
+        "summary": "Set a new message on the display",
+        "operationId": "setMessage",
+        "requestBody": {
+          "description": "Message object to be displayed",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "Invalid input or operation failed"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "message"
+        ],
+        "summary": "Clear the message on the display",
+        "description": "Clear the current and last (cached) message on the device",
+        "operationId": "clearMessage",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      }
+    },
+    "/settings": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Get current settings",
+        "description": "Get the current settings from the device",
+        "operationId": "getSettings",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Settings"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Save settings",
+        "description": "Save the settings on the device",
+        "operationId": "saveSettings",
+        "requestBody": {
+          "description": "The settings object to be saved. If some properties are left out they remain unchanged on the device.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Settings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      }
+    },
+    "/info": {
+      "get": {
+        "tags": [
+          "info"
+        ],
+        "summary": "Get general info data",
+        "description": "Get general info data like version, display, cloud and translation. Should be called initially on first startup and on each save of settings.",
+        "operationId": "getInfo",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Info"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      }
+    },
+    "/cmd": {
+      "post": {
+        "tags": [
+          "cmd"
+        ],
+        "summary": "Execute command",
+        "operationId": "execCmd",
+        "requestBody": {
+          "description": "The command object (name and call parameters) to be executed. <table> <thead> <td>Cmd</td> <td>Parameters</td> <td>Description</td> </thead> <tr> <td>test</td> <td>---</td> <td>Start a short test to check the display and the LED</td> </tr> <tr> <td>restart</td> <td>---</td> <td>Restart the LoxboxPi server (not the device)</td> </tr> </table>",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Command"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      }
+    },
+    "/cloud": {
+      "post": {
+        "tags": [
+          "cloud"
+        ],
+        "summary": "Cloud operations",
+        "operationId": "cloudCmd",
+        "requestBody": {
+          "description": "The command object (name and call parameters) to be executed. <table> <thead> <td>Cmd</td> <td>Parameters</td> </thead> <tr> <td>install</td> <td>---</td> </tr> <tr> <td>login</td> <td>username, password</td> </tr> <tr> <td>logout</td> <td>---</td> </tr> <tr> <td>register_device</td> <td>name</td> </tr> <tr> <td>unregister_device</td> <td>---</td> </tr> </table>",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Command"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "Operation failed"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Message": {
+        "type": "object",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string",
+            "format": "byte",
+            "description": "The base64 encoded PNG image data"
+          }
+        }
+      },
+      "MessageInfo": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Specifies if the message is currently active on the display"
+          },
+          "readTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Specifies the timestamp when the message has been read"
+          },
+          "image": {
+            "type": "string",
+            "format": "byte",
+            "description": "The base64 encoded image data"
+          },
+          "imageMimeType": {
+            "type": "string",
+            "default": "image/png",
+            "description": "The mime-type of the image data"
+          }
+        }
+      },
+      "Settings": {
+        "type": "object",
+        "properties": {
+          "general": {
+            "type": "object",
+            "properties": {
+              "lang": {
+                "type": "string",
+                "default": "en",
+                "description": "The language used on the Website and on the display"
+              }
+            }
+          },
+          "www": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string",
+                "default": "0.0.0.0",
+                "description": "The network the server should listen on"
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32",
+                "default": 80,
+                "description": "The port the server should listen on"
+              }
+            }
+          },
+          "display": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "default": "epd2in7",
+                "description": "The Waveshare EDP type/model."
+              },
+              "rotation": {
+                "type": "integer",
+                "format": "int32",
+                "default": 90,
+                "enum": [
+                  0,
+                  90,
+                  180,
+                  270
+                ],
+                "description": "The content ."
+              }
+            }
+          },
+          "button1": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Specifies if this button should be enabled and handled"
+              },
+              "pin": {
+                "default": "GPIO5",
+                "description": "The GPIO pin number of the button"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "readmsg",
+                  "netinfo",
+                  "lastmsg",
+                  "clearmsg"
+                ],
+                "description": "The associated action which should be executed on button press"
+              }
+            }
+          },
+          "button2": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Specifies if this button should be enabled and handled"
+              },
+              "pin": {
+                "default": "GPIO6",
+                "description": "The GPIO pin number of the button"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "readmsg",
+                  "netinfo",
+                  "lastmsg",
+                  "clearmsg"
+                ],
+                "description": "The associated action which should be executed on button press"
+              }
+            }
+          },
+          "button3": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Specifies if this button should be enabled and handled"
+              },
+              "pin": {
+                "default": "GPIO13",
+                "description": "The GPIO pin number of the button"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "readmsg",
+                  "netinfo",
+                  "lastmsg",
+                  "clearmsg"
+                ],
+                "description": "The associated action which should be executed on button press"
+              }
+            }
+          },
+          "button4": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Specifies if this button should be enabled and handled"
+              },
+              "pin": {
+                "default": "GPIO19",
+                "description": "The GPIO pin number of the button"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "readmsg",
+                  "netinfo",
+                  "lastmsg",
+                  "clearmsg"
+                ],
+                "description": "The associated action which should be executed on button press"
+              }
+            }
+          },
+          "led": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Specifies if LED should be used for notification on new message"
+              },
+              "color": {
+                "type": "string",
+                "default": "#ff0000",
+                "description": "The color (hex value) the RGB LED should pulsate"
+              },
+              "pin_r": {
+                "type": "string",
+                "default": "GPIO16",
+                "description": "The GPIO pin number of the LED's red channel"
+              },
+              "pin_g": {
+                "type": "string",
+                "default": "GPIO20",
+                "description": "The GPIO pin number of the LED's green channel"
+              },
+              "pin_b": {
+                "type": "string",
+                "default": "GPIO21",
+                "description": "The GPIO pin number of the LED's blue channel"
+              }
+            }
+          }
+        }
+      },
+      "Command": {
+        "type": "object",
+        "properties": {
+          "cmd": {
+            "type": "string",
+            "description": "The name/id of the command to be executed"
+          },
+          "params": {
+            "type": "object",
+            "nullable": true,
+            "description": "The params (key-value pairs) passed to the executed command"
+          }
+        }
+      },
+      "Info": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "The version of the LoveboxPi server"
+          },
+          "display": {
+            "type": "object",
+            "properties": {
+              "valid": {
+                "type": "boolean",
+                "description": "Specifies if the given display could be initialized"
+              },
+              "name": {
+                "type": "string",
+                "description": "The type name of the current display"
+              },
+              "width": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The px width of the display"
+              },
+              "height": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The px height of the display"
+              },
+              "rotation": {
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  0,
+                  90,
+                  128,
+                  270
+                ],
+                "description": "The currently applied content rotation on the display"
+              },
+              "effectiveWidth": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The width of the display with applied rotation"
+              },
+              "effectiveHeight": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The height of the display with applied rotation"
+              },
+              "availableTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of all available Waveshare EPD drivers"
+              }
+            }
+          },
+          "cloud": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "object",
+                "properties": {
+                  "installed": {
+                    "type": "boolean",
+                    "description": "Specifies if the cloud service is installed on the device"
+                  },
+                  "loggedin": {
+                    "type": "boolean",
+                    "description": "Specifies if currently logged in to the cloud service"
+                  },
+                  "device_registered": {
+                    "type": "boolean",
+                    "description": "Specifies if the device is currently registered to the account"
+                  },
+                  "service_added": {
+                    "type": "boolean",
+                    "description": "Specifies if LoveboxPi service was added to the registered device"
+                  }
+                }
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "The logged in username/account"
+                  },
+                  "device_id": {
+                    "type": "string",
+                    "description": "The reported device id"
+                  },
+                  "device_name": {
+                    "type": "string",
+                    "description": "The reported device name"
+                  },
+                  "service_id": {
+                    "type": "string",
+                    "description": "The LoveboxPi service id"
+                  },
+                  "service_name": {
+                    "type": "string",
+                    "default": "loveboxpi",
+                    "description": "The added service name"
+                  },
+                  "service_address": {
+                    "type": "string",
+                    "default": "127.0.0.1",
+                    "description": "The added service address"
+                  }
+                }
+              }
+            }
+          },
+          "i18n": {
+            "type": "object",
+            "properties": {
+              "available": {
+                "type": "boolean",
+                "description": "Specifies if the translation for the requested language could be loaded"
+              },
+              "lang": {
+                "type": "string",
+                "default": "en",
+                "description": "The language of the returned translation"
+              },
+              "availableTranslations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "A list of all available translations/languages"
+              },
+              "translationData": {
+                "type": "object",
+                "description": "Contains all translation data"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
