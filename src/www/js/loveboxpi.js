@@ -137,8 +137,12 @@ function setMessage(btn) {
 	$.ajax({
 		method: "POST",
 		url: "api/v1/message",
-		data: { image: imgData },
-		timeout: 10000
+		data: JSON.stringify({
+			image: imgData
+		}),
+		timeout: 30000,
+		processData: false,
+		contentType: "application/json"
 	})
 	.done(function() {
 		showSuccessMessage( $.i18n.tr('alert.setmsg.success') )

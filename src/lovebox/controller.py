@@ -132,9 +132,10 @@ class Controller:
 		self.translator.settingsUpdated()
 		self._restoreState()
 	
-	def setMessage(self,imageData64):
+	def setMessage(self,data):
 		m = MutexLocker()
-		imageData = base64.b64decode(imageData64)
+		js = json.loads(data)
+		imageData = base64.b64decode( js['image'] )
 		self._writeActiveImage(imageData)
 		self._writeActiveState(active=True)
 		self._writeReadTimestamp(clear=True)

@@ -65,16 +65,10 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 				self.send_response(400, "Bad Request: no data provided")
 		elif re.search('/api/v1/message', self.path):
 			ctype = cgi.parse_header(self.headers.get('content-type'))
-			if ctype[0].startswith('application/x-www-form-urlencoded'):
-				formdata = cgi.FieldStorage(
-					fp=self.rfile,
-					headers=self.headers,
-					environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']}
-				)
-				
-				imageData64 = formdata["image"].value
-				_controller.setMessage( imageData64 )
-				
+			if ctype[0] == 'application/json':
+				length = int(self.headers.get('content-length'))
+				data = self.rfile.read(length).decode('utf8')
+				_controller.setMessage(data)
 				self.send_response(200)
 			else:
 				self.send_response(400, "Bad Request: unexpected content type")
