@@ -111,8 +111,8 @@ function retrieveLastMessageInfo()
 		timeout: 30000
 	})
 	.done(function(data) {
-		if( data.imageUrl.length != "" )
-			info.find('img').attr('src', data.imageUrl)
+		if( data.image.length != "" )
+			info.find('img').attr('src', "data:"+data.imageMimeType+";base64,"+data.image)
 		var contentBadge = data.active ? badgeActive : badgeInactive
 		if( data.readTimestamp != "" )
 			contentBadge = badgeRead + ' <span>' + new Date(data.readTimestamp).toLocaleString() + '</span>'

@@ -207,14 +207,17 @@ class Controller:
 	
 	def getLastMessageInfoJSON(self):
 		m = MutexLocker()
-		imageDataUrl = ""
+		imageDataB64 = ""
 		imageData = self._readActiveImage()
+		mimeType = ""
 		if imageData:
-			imageDataUrl = "data:image/png;base64," + base64.b64encode(imageData).decode("utf-8")
+			imageDataB64 = base64.b64encode(imageData).decode("utf-8")
+			mimeType = "image/png"
 		js = {
 			"active": self.active_message,
 			"readTimestamp": self._readReadTimestamp(),
-			"imageUrl": imageDataUrl
+			"image": imageDataB64,
+			"imageMimeType": mimeType
 		}
 		return json.dumps(js)
 	
