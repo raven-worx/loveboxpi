@@ -26,7 +26,7 @@ jobs:
       archive_filename: ${{ steps.create-archive.outputs.file_name }}
       deb_filename: ${{ steps.build-deb.outputs.file_name }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -93,7 +93,7 @@ jobs:
       - build-artifacts
     if: ${{ needs.build-artifacts.outputs.version != 'v0.0.0' || (github.event.inputs && contains('true draft', github.event.inputs.create_release)) }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Generate Changelog
         id: changelog
