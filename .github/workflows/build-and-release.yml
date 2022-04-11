@@ -123,12 +123,12 @@ jobs:
           prerelease: false
 
       - name: Download archive artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: artifact-archive
           path: dist
       - name: Download deb artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: artifact-deb
           path: dist
