@@ -65,7 +65,7 @@ jobs:
           ARCHIVE_NAME: loveboxpi_${{ steps.version.outputs.version_num }}.tar.gz
         id: create-archive
       - name: Upload archive artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: artifact-archive
           path: ${{ steps.create-archive.outputs.file_name }}
@@ -82,7 +82,7 @@ jobs:
           desc: 'LoveboxPi'
         id: build-deb
       - name: Upload deb artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: artifact-deb
           path: ${{ steps.build-deb.outputs.file_name }}
